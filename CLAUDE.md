@@ -26,7 +26,7 @@ Könüllü (opt-in), açıq şəkildə zarafat olan "haker terminalı" veb tətb
      "Pizza sifarişi izlənir...", "Corab cütləri sayılır...",
      "Pişiyin gizli planı deşifrə edilir...", "Qonşunun çayı soyuyub: aşkarlandı".
    - Qeyri-bərabər progress bar (≈99%-də ilişir, sonra tamamlanır), "ACCESS GRANTED".
-4. **Final Reveal:** Böyük "Zarafat idi! 😄" (bir neçə variantdan təsadüfi), hədəf adı,
+4. **Final Reveal:** Böyük sabit mətn "Hərşey hazırdır, daxil ola bilərsiz" (təsadüfi variant yoxdur), hədəf adı,
    "Yenidən" və "Dostuna göndər" (navigator.share + clipboard fallback).
 
 ## Animasiya Qaydaları (scroll-driven)
@@ -41,6 +41,12 @@ Mənbə: `claude_animation_rules_setup.md`. Bu layihədə JS (TS yox) və Vite (
   (məs. `// 0.2 → 0.5: hissə z oxu boyunca çıxır`).
 - Mobil və desktopda işləməlidir (responsive fallback).
 - Nümunə: `src/pages/telefon/PhoneWorld.jsx`.
+
+## Commit mesajları
+Hər commit `COMMIT_CONVENTION.md`-yə uyğun yazılır (Conventional Commits):
+`<tip>: <təsvir>` — tip `feat`/`fix`/`refactor`/`style`/`perf`/`docs`/`chore`/`build`/`test`/`revert`,
+tipdən sonra **mötərizə (scope) yazılmır**; təsvir **ingiliscə, maksimum 6–7 söz**, əmr formasında,
+kiçik hərflə, nöqtəsiz. Məs.: `feat: add shock effect on eye opening`.
 
 ## HARD CONSTRAINTS (məcburi — pozulmamalıdır)
 - ❌ NO camera / getUserMedia / mikrofon / geolokasiya — heç bir yerdə.

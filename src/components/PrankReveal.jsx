@@ -1,21 +1,67 @@
-import { useEffect, useMemo } from 'react'
-import { motion } from 'framer-motion'
+import { useEffect } from 'react'
+import { motion, useReducedMotion } from 'framer-motion'
 import { LogIn } from 'lucide-react'
 import { reveal } from '../audio/soundEffects.js'
 
-const VARIANTS = [
-  'Qağa, qapı açıqdı, gir də, nə durmusan? 🚪',
-  'Ala, açarı tapdıq 🔑 Gəl görək içəridə nə var',
-  'Hack qurtardı, əsl söhbət indi başlayır ✨',
-  'Portal açıldı. Ürəyin çatırsa, gir 🌀',
-  'Vallah, hər dəfə başqa yerə düşürsən. Yoxla 🌌',
-  'Ağ dovşanın dalınca get, qağa 🐇',
-  'Şansını yoxla, bəlkə bomba şey çıxdı 🎲',
-  'İçəridə səni gözləyirlər… kim? Gir gör də 👀',
-]
+const MESSAGE = 'Hərşey hazırdır, daxil ola bilərsiz'
+
+// Flip wave loop (s): each letter spins once around its X axis, one after another
+const FLIP_S = 0.9 // one letter's flip
+const STAGGER_S = 0.05 // delay between neighbouring letters
+const PERIOD_S = 4 // the wave starts again this often
+
+/** Title whose letters do a 3D flip wave on a loop, over a softly breathing neon glow. */
+function FlipWaveTitle({ text }) {
+  const reduce = useReducedMotion()
+  let n = 0
+  return (
+    <motion.h1
+      aria-label={text}
+      className="neon-text font-display text-4xl font-black leading-tight tracking-wide [perspective:600px] sm:text-6xl"
+      animate={
+        reduce
+          ? undefined
+          : {
+              textShadow: [
+                '0 0 6px rgba(0,255,102,0.6), 0 0 14px rgba(0,255,102,0.3)',
+                '0 0 12px rgba(0,255,102,0.9), 0 0 32px rgba(0,255,102,0.6)',
+                '0 0 6px rgba(0,255,102,0.6), 0 0 14px rgba(0,255,102,0.3)',
+              ],
+            }
+      }
+      transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+    >
+      {text.split(' ').map((word, wi, words) => (
+        <span key={wi} aria-hidden="true">
+          <span className="inline-block whitespace-nowrap">
+            {Array.from(word).map((ch, ci) => {
+              const i = n++
+              return (
+                <motion.span
+                  key={ci}
+                  className="inline-block"
+                  animate={reduce ? undefined : { rotateX: [0, 360], y: [0, -10, 0] }}
+                  transition={{
+                    duration: FLIP_S,
+                    ease: 'easeInOut',
+                    delay: 0.6 + i * STAGGER_S,
+                    repeat: Infinity,
+                    repeatDelay: PERIOD_S - FLIP_S,
+                  }}
+                >
+                  {ch}
+                </motion.span>
+              )
+            })}
+          </span>
+          {wi < words.length - 1 && ' '}
+        </span>
+      ))}
+    </motion.h1>
+  )
+}
 
 export default function PrankReveal({ name, onEnter }) {
-  const message = useMemo(() => VARIANTS[Math.floor(Math.random() * VARIANTS.length)], [])
   const target = name.trim()
 
   // Reveal sound
@@ -31,7 +77,7 @@ export default function PrankReveal({ name, onEnter }) {
         transition={{ type: 'spring', stiffness: 120, damping: 12 }}
         className="max-w-2xl rounded-lg border border-neon/40 bg-black/85 p-8 shadow-[0_0_40px_rgba(0,255,102,0.2)]"
       >
-        <h1 className="neon-text text-4xl font-extrabold sm:text-6xl">{message}</h1>
+        <FlipWaveTitle text={MESSAGE} />
         {target && (
           <p className="mt-4 text-lg text-green-200">
             Hörmətli <strong className="neon-text">{target}</strong>, narahat olma: heç nə oğurlanmadı.

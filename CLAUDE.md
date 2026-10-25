@@ -18,8 +18,9 @@ Könüllü (opt-in), açıq şəkildə zarafat olan "haker terminalı" veb tətb
    "tam saxtadır" qeydi, hədəf/ad input (mute və tam ekran düymələri yoxdur).
 2. **Interaction Trigger:** Klikdə synth bip (Web Audio API, səs həmişə açıqdır). Tam ekran
    "Hakerliyi Başlat" klikində (və "Yenidən"də) avtomatik açılır. İlk səhifədən sonrakı bütün
-   səhifələr (terminal, reveal, `/daxil`) default tam ekrandır: tam ekrandan çıxılıbsa, növbəti
-   klik/toxunuşda yenidən açılır.
+   səhifələr (terminal, reveal, `/v1/*`) default tam ekrandır: tam ekrandan çıxılıbsa, növbəti
+   klik/toxunuşda yenidən açılır. `/v1/*` dünyaları `src/pages/worlds.js`-dəki sıra ilə göstərilir
+   (təsadüfi yox).
 3. **Hacking Simulation (Matrix UI):**
    - Canvas Matrix yağışı (requestAnimationFrame, sütun limiti, tab gizli olanda dayanır).
    - Typewriter saxta loglar — **yalnız gülməli/cəfəng** mətnlər:

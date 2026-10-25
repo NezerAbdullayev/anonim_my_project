@@ -2,11 +2,11 @@ import { useEffect } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { installButtonClickSound } from './audio/uiSound.js'
 import HomePage from './pages/home/HomePage.jsx'
-import DaxilLayout from './pages/daxil/DaxilLayout.jsx'
-import { DAXIL_PATH, WORLDS, pickWorld, readLastWorld, worldPath } from './pages/worlds.js'
+import WorldsLayout from './pages/v1/WorldsLayout.jsx'
+import { WORLDS_PATH, WORLDS, firstWorld, worldPath } from './pages/worlds.js'
 
-// "/daxil" on its own: jump to a random world (different from the last one), no extra history entry
-const RandomWorld = () => <Navigate to={worldPath(pickWorld(readLastWorld()))} replace />
+// "/v1" on its own (or an unknown world): start at the first world, no extra history entry
+const FirstWorld = () => <Navigate to={worldPath(firstWorld())} replace />
 
 export default function App() {
   // Every button in the app makes a click sound
@@ -16,12 +16,12 @@ export default function App() {
     <div className="relative min-h-full w-full overflow-hidden bg-black font-mono text-neon">
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path={DAXIL_PATH} element={<DaxilLayout />}>
-          <Route index element={<RandomWorld />} />
+        <Route path={WORLDS_PATH} element={<WorldsLayout />}>
+          <Route index element={<FirstWorld />} />
           {WORLDS.map(({ slug, Component }) => (
             <Route key={slug} path={slug} element={<Component />} />
           ))}
-          <Route path="*" element={<RandomWorld />} />
+          <Route path="*" element={<FirstWorld />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

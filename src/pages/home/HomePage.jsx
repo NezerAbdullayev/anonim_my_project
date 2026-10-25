@@ -8,7 +8,7 @@ import EyeCodeEffect from '../goz/EyeCodeEffect.jsx'
 import ShatterTransition, { SHATTER_REVEAL_DELAY } from '../../components/ShatterTransition.jsx'
 import { initAudio, closeAudio } from '../../audio/soundEffects.js'
 import { enterFullscreen, leaveFullscreen, keepFullscreen } from '../../fullscreen.js'
-import { DAXIL_PATH } from '../worlds.js'
+import { WORLDS_PATH } from '../worlds.js'
 
 /**
  * "/" — landing → fake hacking terminal → eye animation (12 s, with music)
@@ -33,11 +33,11 @@ export default function HomePage() {
     setStage('landing')
   }
 
-  // "Daxil ol": go to a random world under /daxil; stays fullscreen
+  // "Daxil ol": go to the first world under /v1; stays fullscreen
   const enter = () => {
     enterFullscreen()
     closeAudio()
-    navigate(DAXIL_PATH)
+    navigate(WORLDS_PATH)
   }
 
   useEffect(() => {

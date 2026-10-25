@@ -1,23 +1,18 @@
 import { useEffect } from 'react'
 import { useLocation, useNavigate, useOutlet } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Shuffle } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { keepFullscreen } from '../../fullscreen.js'
-import { pickWorld, saveLastWorld, worldPath } from '../worlds.js'
+import { nextWorld, worldPath } from '../worlds.js'
 
-/** Shell for every /daxil/<slug> page: fade between worlds + "Başqa yerə at" button. */
-export default function DaxilLayout() {
+/** Shell for every /v1/<slug> page: fade between worlds + button to the next world in order. */
+export default function WorldsLayout() {
   const location = useLocation()
   const outlet = useOutlet()
   const navigate = useNavigate()
   const slug = location.pathname.split('/')[2]
 
   useEffect(keepFullscreen, [])
-
-  // Remember the shown world so the next visit starts somewhere else
-  useEffect(() => {
-    if (slug) saveLastWorld(slug)
-  }, [slug])
 
   return (
     <>
@@ -35,11 +30,11 @@ export default function DaxilLayout() {
 
       <button
         type="button"
-        onClick={() => navigate(worldPath(pickWorld(slug)))}
+        onClick={() => navigate(worldPath(nextWorld(slug)))}
         className="fixed bottom-6 left-1/2 z-30 flex -translate-x-1/2 items-center gap-2 rounded-full border border-white/40 bg-black/40 px-5 py-2.5 font-sans text-sm font-semibold text-white backdrop-blur-md transition hover:bg-black/60"
       >
-        <Shuffle className="h-4 w-4" aria-hidden="true" />
         Başqa yerə at
+        <ArrowRight className="h-4 w-4" aria-hidden="true" />
       </button>
     </>
   )

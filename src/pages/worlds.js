@@ -5,7 +5,6 @@ import PartyWorld from './toy/PartyWorld.jsx'
 import AuroraWorld from './aurora/AuroraWorld.jsx'
 import CatWorld from './pisikler/CatWorld.jsx'
 import PhoneWorld from './telefon/PhoneWorld.jsx'
-import EyeWorld from './goz/EyeWorld.jsx'
 
 export const DAXIL_PATH = '/daxil'
 
@@ -18,7 +17,7 @@ export const WORLDS = [
   { slug: 'aurora', Component: AuroraWorld },
   { slug: 'pisikler', Component: CatWorld },
   { slug: 'telefon', Component: PhoneWorld },
-  { slug: 'goz', Component: EyeWorld },
+  // The eye (src/pages/goz/) is not a world: it only plays on "/", after the terminal
 ]
 
 export const worldPath = (slug) => `${DAXIL_PATH}/${slug}`

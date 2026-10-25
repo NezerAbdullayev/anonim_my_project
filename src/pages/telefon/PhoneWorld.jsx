@@ -103,7 +103,7 @@ export default function PhoneWorld() {
   const outroOpacity = useTransform(progress, [0.88, 0.98], [0, 1])
 
   return (
-    <div ref={scrollRef} className="fixed inset-0 overflow-y-auto bg-slate-950 font-sans text-white">
+    <div ref={scrollRef} className="no-scrollbar fixed inset-0 overflow-y-auto bg-slate-950 font-sans text-white">
       {/* Tall scroll track; the sticky stage stays pinned while it scrolls */}
       <div className="relative h-[400vh]">
         <div className="sticky top-0 flex h-screen flex-col items-center justify-center gap-8 overflow-hidden px-4 sm:flex-row sm:gap-16 [perspective:1200px]">

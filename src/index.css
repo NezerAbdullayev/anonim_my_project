@@ -12,6 +12,15 @@ body,
   font-family: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
+/* Scrolls normally, but without a visible scrollbar (scroll-driven worlds) */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 .neon-text {
   text-shadow: 0 0 6px rgba(0, 255, 102, 0.7), 0 0 18px rgba(0, 255, 102, 0.35);
 }

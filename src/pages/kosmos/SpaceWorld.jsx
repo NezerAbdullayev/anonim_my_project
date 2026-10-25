@@ -28,7 +28,7 @@ export default function SpaceWorld() {
   const outroOpacity = useTransform(progress, [0.965, 0.99], [0, 1])
 
   return (
-    <div ref={scrollRef} className="fixed inset-0 overflow-y-auto bg-black font-sans text-white">
+    <div ref={scrollRef} className="no-scrollbar fixed inset-0 overflow-y-auto bg-black font-sans text-white">
       {/* Tall scroll track; the sticky stage stays pinned while it scrolls */}
       <div className="relative h-[1800vh]">
         <div className="sticky top-0 h-screen overflow-hidden">

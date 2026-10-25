@@ -4,11 +4,12 @@ import Landing from '../../components/Landing.jsx'
 import HackerTerminal from '../../components/HackerTerminal.jsx'
 import PrankReveal from '../../components/PrankReveal.jsx'
 import MatrixRain from '../../components/MatrixRain.jsx'
+import EyeCodeEffect from '../goz/EyeCodeEffect.jsx'
 import { initAudio, closeAudio } from '../../audio/soundEffects.js'
 import { enterFullscreen, leaveFullscreen, keepFullscreen } from '../../fullscreen.js'
 import { DAXIL_PATH } from '../worlds.js'
 
-/** "/" — landing → fake hacking terminal → prank reveal. */
+/** "/" — landing → fake hacking terminal → eye animation (12 s, with music) → prank reveal. */
 export default function HomePage() {
   const [stage, setStage] = useState('landing')
   const [name, setName] = useState('')
@@ -58,7 +59,12 @@ export default function HomePage() {
       <div className="relative z-20 min-h-full">
         {stage === 'landing' && <Landing name={name} setName={setName} onStart={start} />}
         {stage === 'running' && (
-          <HackerTerminal name={name} onDone={() => setStage('reveal')} onExit={exit} />
+          <HackerTerminal name={name} onDone={() => setStage('eye')} onExit={exit} />
+        )}
+        {stage === 'eye' && (
+          <div className="fixed inset-0 z-30 bg-[#050505]">
+            <EyeCodeEffect onEnd={() => setStage('reveal')} />
+          </div>
         )}
         {stage === 'reveal' && <PrankReveal name={name} onEnter={enter} />}
       </div>

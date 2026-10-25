@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
-import { beep, alarm, success } from '../audio/soundEffects.js'
+import { beep } from '../audio/soundEffects.js'
 
 // Same jokes as before, now written as (harmless, nonsense) code
 const POOL = [
@@ -130,13 +130,12 @@ const renderLine = (text) => {
   )
 }
 
-/** Fake hacking terminal. Typewriter log, uneven progress bar, ACCESS GRANTED. */
+/** Fake hacking terminal: typed target line, decoding code burst, uneven progress bar. */
 export default function HackerTerminal({ onDone }) {
   const reduce = useReducedMotion()
   const [lines, setLines] = useState([]) // finished lines
   const [typing, setTyping] = useState('') // line currently being typed
   const [progress, setProgress] = useState(0)
-  const [granted, setGranted] = useState(false)
   const scrollRef = useRef(null)
 
   // Main script: runs once per mount, cleaned up on unmount (so exit stops everything)
@@ -189,19 +188,10 @@ export default function HackerTerminal({ onDone }) {
       }
       await sleep(DECODE_MS)
 
-      // Sticks near 99% for a while (the classic fake hang)
-      if (cancelled) return
-      setProgress(99)
-      setLines((prev) => [...prev, { text: 'await lastStep() // always stuck at 99%', code: true }])
-      alarm()
-      await sleep(2200)
+      // Burst done: bar fills up, then the eye animation takes over
       if (cancelled) return
       setProgress(100)
-      await sleep(500)
-      if (cancelled) return
-      setGranted(true)
-      success()
-      await sleep(2600)
+      await sleep(400)
       if (!cancelled) onDone()
     }
     run()
@@ -261,27 +251,12 @@ export default function HackerTerminal({ onDone }) {
               {l.code ? <DecodeLine text={l.text} reduce={reduce} /> : renderLine(l.text)}
             </div>
           ))}
-          {!granted && (
-            <div className="neon-text">
-              <span className="text-green-600">$ </span>
-              {renderLine(typing)}
-              <span className="caret" aria-hidden="true" />
-            </div>
-          )}
+          <div className="neon-text">
+            <span className="text-green-600">$ </span>
+            {renderLine(typing)}
+            <span className="caret" aria-hidden="true" />
+          </div>
         </div>
-
-        {granted && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="absolute inset-0 flex items-center justify-center bg-black/70"
-          >
-            <h2 className="neon-text glitch text-center text-4xl font-extrabold tracking-widest sm:text-6xl">
-              HƏRŞEY HAZIRDIR
-            </h2>
-          </motion.div>
-        )}
       </div>
     </div>
   )

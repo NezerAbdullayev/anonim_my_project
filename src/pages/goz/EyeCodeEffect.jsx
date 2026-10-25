@@ -24,6 +24,7 @@ const PUPIL = '#000000'
 const CRACK_OPEN = 0.12 // how wide the slit opens before the snap
 const SHAKE_PX = 16
 const ZOOM_DILATE = 0.3 // pupil widens by 30% while we fall into it
+const END_HOLD_MS = 1200 // black hold before onEnd
 
 const rand = (min, max) => Math.random() * (max - min) + min
 const token = () => TOKENS[Math.floor(Math.random() * TOKENS.length)]
@@ -38,9 +39,12 @@ const codeLine = (len) => {
  * character takes the colour of a hidden eye image underneath (ASCII-art style).
  * Text is a mask (destination-in) over the colour layer, so a dense grid stays cheap.
  * The pupil follows the pointer (or wanders on its own).
+ * `onEnd` (optional) is called a moment after the screen has gone fully black.
  */
-export default function EyeCodeEffect() {
+export default function EyeCodeEffect({ onEnd }) {
   const canvasRef = useRef(null)
+  const onEndRef = useRef(onEnd)
+  onEndRef.current = onEnd
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -75,6 +79,8 @@ export default function EyeCodeEffect() {
     const zoomStart = introStart + ZOOM_AT
     const endAt = introStart + TOTAL_MS
     const stopMusic = playEyeMusic(introStart)
+    // Report the end: shortly after full black (lets the last thump ring out)
+    const endTimer = setTimeout(() => onEndRef.current?.(), TOTAL_MS + END_HOLD_MS)
     let zoom = 0 // eased zoom progress 0 → 1
     let finished = false
     let nextBlink = Infinity // blinking starts after the intro
@@ -426,6 +432,7 @@ export default function EyeCodeEffect() {
       running = false
       stop()
       stopMusic()
+      clearTimeout(endTimer)
       window.removeEventListener('resize', onResize)
       window.removeEventListener('pointermove', onPointer)
       document.removeEventListener('visibilitychange', onVisibility)

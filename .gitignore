@@ -6,3 +6,9 @@ dist
 .env.*
 .idea/
 .claude/settings.local.json
+
+# Music files: copyrighted tracks must not end up in the public repo
+public/audio/*.mp3
+public/audio/*.ogg
+public/audio/*.m4a
+public/audio/*.wav

@@ -1,4 +1,6 @@
+import { useEffect } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
+import { installButtonClickSound } from './audio/uiSound.js'
 import HomePage from './pages/home/HomePage.jsx'
 import DaxilLayout from './pages/daxil/DaxilLayout.jsx'
 import { DAXIL_PATH, WORLDS, pickWorld, readLastWorld, worldPath } from './pages/worlds.js'
@@ -7,6 +9,9 @@ import { DAXIL_PATH, WORLDS, pickWorld, readLastWorld, worldPath } from './pages
 const RandomWorld = () => <Navigate to={worldPath(pickWorld(readLastWorld()))} replace />
 
 export default function App() {
+  // Every button in the app makes a click sound
+  useEffect(installButtonClickSound, [])
+
   return (
     <div className="relative min-h-full w-full overflow-hidden bg-black font-mono text-neon">
       <Routes>

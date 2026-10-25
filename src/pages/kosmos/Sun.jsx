@@ -1,0 +1,48 @@
+import { useState } from 'react'
+import { motion, useMotionValueEvent, useTransform } from 'framer-motion'
+import SphereView from './SphereView.jsx'
+
+const END = 0.08 // the Sun is out of frame by here
+
+/** The journey starts facing the Sun; then we turn away and it slides off to the left. */
+export default function Sun({ progress, engine, texture }) {
+  const [visible, setVisible] = useState(true)
+  useMotionValueEvent(progress, 'change', (p) => setVisible(p < END + 0.01))
+
+  // 0 → END: camera turns away: the Sun slides off to the left…
+  const x = useTransform(progress, [0, END], ['0vw', '-80vw'])
+  // …and swells a little (it is passing the edge of our view)
+  const scale = useTransform(progress, [0, END], [1, 1.5])
+  // END-0.03 → END: fades as it leaves
+  const opacity = useTransform(progress, [END - 0.03, END], [1, 0])
+
+  if (!visible) return null
+  return (
+    <motion.div
+      className="pointer-events-none absolute left-1/2 top-1/2 z-10 h-[60vmin] w-[60vmin] -ml-[30vmin] -mt-[26vmin]"
+      style={{ x, scale, opacity }}
+    >
+      {/* Outer glow, breathing slowly */}
+      <motion.div
+        className="absolute -inset-[70%] rounded-full bg-[radial-gradient(circle,rgba(255,196,90,0.5)_0%,rgba(255,140,40,0.16)_32%,rgba(255,120,30,0)_68%)]"
+        animate={{ scale: [1, 1.05, 1] }}
+        transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      {/* Corona hugging the disk */}
+      <div className="absolute -inset-[16%] rounded-full bg-[radial-gradient(circle,rgba(255,250,220,0.95)_52%,rgba(255,210,120,0.45)_62%,rgba(255,170,60,0)_76%)]" />
+      {texture && <SphereView engine={engine} texture={texture} px={560} spin={0.008} options={{ emissive: true, pitch: 0.1 }} />}
+    </motion.div>
+  )
+}
+
+/** Warm sunlight washing in from the left; weaker the farther out we are. */
+export function SunLight({ progress }) {
+  // 0.03 → 0.1: appears as the Sun leaves the frame; then fades with distance
+  const opacity = useTransform(progress, [0.03, 0.1, 0.5, 1], [0, 1, 0.45, 0.15])
+  return (
+    <motion.div
+      className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_-10%_30%,rgba(255,214,150,0.22),rgba(255,214,150,0)_60%)]"
+      style={{ opacity }}
+    />
+  )
+}

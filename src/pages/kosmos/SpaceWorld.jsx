@@ -1,80 +1,85 @@
-import { useMemo } from 'react'
-import { motion } from 'framer-motion'
-import AnimatedTitle from '../shared/AnimatedTitle.jsx'
-import { rand } from '../shared/util.js'
+import { useRef } from 'react'
+import { motion, useScroll, useSpring, useTransform } from 'framer-motion'
+import Starfield from './Starfield.jsx'
+import Sun, { SunLight } from './Sun.jsx'
+import Planet from './Planet.jsx'
+import JourneyHud from './JourneyHud.jsx'
+import { BODIES } from './journey.js'
+import { useSpaceEngine } from './useSpaceEngine.js'
 
+// Route order = generation order, so the first bodies are ready first
+const TEXTURE_KEYS = ['sun', 'mercury', 'venus', 'earth', 'moon', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune']
+
+/**
+ * Scroll-driven trip through the Solar System: start at the Sun, fly past every
+ * planet (and through the asteroid belt) out to Neptune. ~1800vh of scroll ≈ 35 s.
+ */
 export default function SpaceWorld() {
-  const stars = useMemo(
-    () =>
-      Array.from({ length: 120 }, () => ({
-        left: rand(0, 100),
-        top: rand(0, 100),
-        size: rand(1, 3),
-        duration: rand(2, 5),
-        delay: rand(0, 4),
-      })),
-    []
-  )
+  const scrollRef = useRef(null)
+  const { scrollYProgress } = useScroll({ container: scrollRef })
+  // Spring on top of raw scroll: soft and floaty, like coasting through space
+  const progress = useSpring(scrollYProgress, { stiffness: 55, damping: 22, restDelta: 0.0002 })
+  const { textures, engine } = useSpaceEngine(TEXTURE_KEYS)
+  const loaded = Object.keys(textures).length
+
+  // 0 → 0.035: intro title fades as the trip begins
+  const introOpacity = useTransform(progress, [0, 0.035], [1, 0])
+  // 0.965 → 0.99: outro appears past Neptune
+  const outroOpacity = useTransform(progress, [0.965, 0.99], [0, 1])
 
   return (
-    <div className="fixed inset-0 overflow-hidden bg-gradient-to-b from-indigo-950 via-slate-950 to-black font-sans text-white">
-      {stars.map((s, i) => (
-        <motion.span
-          key={i}
-          className="absolute rounded-full bg-white"
-          style={{ left: `${s.left}%`, top: `${s.top}%`, width: s.size, height: s.size }}
-          animate={{ opacity: [0.2, 1, 0.2] }}
-          transition={{ duration: s.duration, delay: s.delay, repeat: Infinity }}
-        />
-      ))}
+    <div ref={scrollRef} className="fixed inset-0 overflow-y-auto bg-black font-sans text-white">
+      {/* Tall scroll track; the sticky stage stays pinned while it scrolls */}
+      <div className="relative h-[1800vh]">
+        <div className="sticky top-0 h-screen overflow-hidden">
+          <Starfield progress={progress} />
+          <SunLight progress={progress} />
+          <Sun progress={progress} engine={engine} texture={textures.sun} />
+          {BODIES.map((body) => (
+            <Planet
+              key={body.key}
+              body={body}
+              progress={progress}
+              engine={engine}
+              texture={textures[body.key]}
+              moonTexture={textures.moon}
+            />
+          ))}
+          <JourneyHud progress={progress} />
 
-      {/* Shooting star */}
-      <motion.span
-        className="absolute h-0.5 w-32 rounded-full bg-gradient-to-r from-transparent to-white"
-        style={{ top: '15%', left: '-10%', rotate: 20 }}
-        animate={{ x: ['0vw', '120vw'], y: ['0vh', '45vh'], opacity: [0, 1, 0] }}
-        transition={{ duration: 1.6, repeat: Infinity, repeatDelay: 3.5, ease: 'easeIn' }}
-      />
+          <motion.div
+            className="pointer-events-none absolute inset-x-4 top-[12vh] z-[700] text-center"
+            style={{ opacity: introOpacity }}
+          >
+            <h1 className="font-display text-4xl font-black tracking-wide drop-shadow-[0_2px_16px_rgba(0,0,0,0.9)] sm:text-6xl">
+              Ala, kosmosa düşdük!
+            </h1>
+            <p className="mt-3 text-base text-slate-200 drop-shadow-[0_1px_8px_rgba(0,0,0,0.9)] sm:text-lg">
+              Günəş sistemi boyu səyahət
+            </p>
+            <motion.p
+              className="mt-[46vh] text-sm uppercase tracking-[0.3em] text-amber-100 sm:text-base"
+              animate={{ y: [0, 8, 0] }}
+              transition={{ duration: 1.6, repeat: Infinity }}
+            >
+              Aşağı sürüşdür ↓
+            </motion.p>
+          </motion.div>
 
-      {/* Planet with ring and orbiting moon */}
-      <div className="absolute right-[8%] top-[12%] h-40 w-40 sm:h-56 sm:w-56">
-        <motion.div
-          className="absolute inset-0 rounded-full bg-gradient-to-br from-fuchsia-400 via-purple-600 to-indigo-900 shadow-[0_0_60px_rgba(192,132,252,0.5)]"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
-        />
-        <div className="absolute left-1/2 top-1/2 h-12 w-[150%] -translate-x-1/2 -translate-y-1/2 -rotate-12 rounded-[50%] border-4 border-amber-200/60" />
-        <motion.div
-          className="absolute -inset-16"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
-        >
-          <span className="absolute left-0 top-1/2 h-6 w-6 -translate-y-1/2 rounded-full bg-slate-300 shadow-[0_0_12px_rgba(255,255,255,0.6)]" />
-        </motion.div>
-      </div>
+          <motion.div
+            className="pointer-events-none absolute inset-x-4 top-1/2 z-[700] -translate-y-1/2 text-center"
+            style={{ opacity: outroOpacity }}
+          >
+            <h2 className="font-display text-3xl font-black tracking-wide sm:text-5xl">Neptundan o yana — sonsuzluq ✨</h2>
+            <p className="mt-3 text-slate-300">Səyahət bitdi. Yenidən başlamaq üçün yuxarı qalx ↑</p>
+          </motion.div>
 
-      {/* Rocket */}
-      <motion.div
-        className="absolute bottom-[10%] left-[10%] text-5xl sm:text-6xl"
-        animate={{ y: [0, -24, 0], rotate: [-4, 4, -4] }}
-        transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-      >
-        🚀
-      </motion.div>
-
-      <div className="relative flex h-full flex-col items-center justify-center px-4 text-center">
-        <AnimatedTitle
-          text="Ala, kosmosa düşdük!"
-          className="text-4xl font-extrabold tracking-wide drop-shadow-[0_0_20px_rgba(167,139,250,0.8)] sm:text-7xl"
-        />
-        <motion.p
-          className="mt-6 text-lg text-indigo-200 sm:text-xl"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.2, duration: 1 }}
-        >
-          Burda çəki yoxdu, Wi-Fi da yoxdu, dərd də yoxdu 🛰️
-        </motion.p>
+          {loaded < TEXTURE_KEYS.length && (
+            <p className="pointer-events-none absolute bottom-4 left-4 z-[700] font-mono text-[11px] text-slate-400">
+              Planetlər hazırlanır… {loaded}/{TEXTURE_KEYS.length}
+            </p>
+          )}
+        </div>
       </div>
     </div>
   )

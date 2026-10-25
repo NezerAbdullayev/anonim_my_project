@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { LogIn } from 'lucide-react'
 import { reveal } from '../audio/soundEffects.js'
+import { playRevealMusic } from '../audio/revealMusic.js'
 
 const MESSAGE = 'Hərşey hazırdır, daxil ola bilərsiz'
 
@@ -65,10 +66,18 @@ function FlipWaveTitle({ text }) {
 export default function PrankReveal({ name, onEnter, delay = 0 }) {
   const target = name.trim()
 
-  // Reveal sound, together with the card's entrance
+  // Reveal sound together with the card's entrance, then the creepy loop for as long
+  // as this page is open
   useEffect(() => {
-    const t = setTimeout(reveal, delay * 1000)
-    return () => clearTimeout(t)
+    let stopMusic = null
+    const t = setTimeout(() => {
+      reveal()
+      stopMusic = playRevealMusic()
+    }, delay * 1000)
+    return () => {
+      clearTimeout(t)
+      stopMusic?.()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

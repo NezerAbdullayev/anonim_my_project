@@ -24,7 +24,7 @@ const PUPIL = '#000000'
 const CRACK_OPEN = 0.12 // how wide the slit opens before the snap
 const SHAKE_PX = 16
 const ZOOM_DILATE = 0.3 // pupil widens by 30% while we fall into it
-const END_HOLD_MS = 1200 // black hold before onEnd
+const END_HOLD_MS = 250 // black hold before onEnd
 
 const rand = (min, max) => Math.random() * (max - min) + min
 const token = () => TOKENS[Math.floor(Math.random() * TOKENS.length)]

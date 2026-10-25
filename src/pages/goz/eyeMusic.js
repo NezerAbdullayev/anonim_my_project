@@ -25,6 +25,7 @@ export function playEyeMusic(animStart) {
   }
   let scheduled = false
   let closed = false
+  let master = null
 
   const schedule = () => {
     if (scheduled || closed || ctx.state !== 'running') return
@@ -32,7 +33,7 @@ export function playEyeMusic(animStart) {
     if (elapsed > TOTAL_MS / 1000) return // too late: animation already over
     scheduled = true
     removeListeners()
-    buildScore(ctx, ctx.currentTime - elapsed)
+    master = buildScore(ctx, ctx.currentTime - elapsed)
   }
   const unlock = () => ctx.resume().then(schedule).catch(() => {})
   const removeListeners = () => {
@@ -47,18 +48,30 @@ export function playEyeMusic(animStart) {
     window.addEventListener('keydown', unlock)
   }
 
+  // Short fade-out instead of a hard cut (the last thump blends into what comes next)
   return () => {
     closed = true
     removeListeners()
-    try {
-      ctx.close()
-    } catch {
-      // already closed: ignore
+    const close = () => {
+      try {
+        ctx.close()
+      } catch {
+        // already closed: ignore
+      }
+    }
+    if (master && ctx.state === 'running') {
+      master.gain.setTargetAtTime(0, ctx.currentTime, 0.15)
+      setTimeout(close, 800)
+    } else {
+      close()
     }
   }
 }
 
-/** Schedules every sound relative to t0 (AudioContext time of the animation start). */
+/**
+ * Schedules every sound relative to t0 (AudioContext time of the animation start).
+ * Returns the master gain, so the score can be faded out early.
+ */
 function buildScore(ctx, t0) {
   const now = ctx.currentTime
   const s = (ms) => t0 + ms / 1000 // timeline ms → AudioContext seconds (can be < 0)
@@ -252,6 +265,8 @@ function buildScore(ctx, t0) {
     const fin = osc('sine', 80, END, END + 2.6, gainNode([[END, 0.9], [END + 2.5, 0.0001]], master, 0.8))
     fin.frequency.exponentialRampToValueAtTime(25, T(END + 1.2))
   }
+
+  return master
 }
 
 function noiseBuffer(ctx, seconds) {

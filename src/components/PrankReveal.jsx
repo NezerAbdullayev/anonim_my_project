@@ -61,12 +61,15 @@ function FlipWaveTitle({ text }) {
   )
 }
 
-export default function PrankReveal({ name, onEnter }) {
+/** `delay` (s): wait before the entrance, e.g. while a transition is still covering the page. */
+export default function PrankReveal({ name, onEnter, delay = 0 }) {
   const target = name.trim()
 
-  // Reveal sound
+  // Reveal sound, together with the card's entrance
   useEffect(() => {
-    reveal()
+    const t = setTimeout(reveal, delay * 1000)
+    return () => clearTimeout(t)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -74,7 +77,7 @@ export default function PrankReveal({ name, onEnter }) {
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ type: 'spring', stiffness: 120, damping: 12 }}
+        transition={{ type: 'spring', stiffness: 120, damping: 12, delay }}
         className="max-w-2xl rounded-lg border border-neon/40 bg-black/85 p-8 shadow-[0_0_40px_rgba(0,255,102,0.2)]"
       >
         <FlipWaveTitle text={MESSAGE} />

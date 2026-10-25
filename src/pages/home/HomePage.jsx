@@ -5,14 +5,19 @@ import HackerTerminal from '../../components/HackerTerminal.jsx'
 import PrankReveal from '../../components/PrankReveal.jsx'
 import MatrixRain from '../../components/MatrixRain.jsx'
 import EyeCodeEffect from '../goz/EyeCodeEffect.jsx'
+import ShatterTransition, { SHATTER_REVEAL_DELAY } from '../../components/ShatterTransition.jsx'
 import { initAudio, closeAudio } from '../../audio/soundEffects.js'
 import { enterFullscreen, leaveFullscreen, keepFullscreen } from '../../fullscreen.js'
 import { DAXIL_PATH } from '../worlds.js'
 
-/** "/" — landing → fake hacking terminal → eye animation (12 s, with music) → prank reveal. */
+/**
+ * "/" — landing → fake hacking terminal → eye animation (12 s, with music)
+ * → the black shatters → prank reveal.
+ */
 export default function HomePage() {
   const [stage, setStage] = useState('landing')
   const [name, setName] = useState('')
+  const [shattering, setShattering] = useState(false)
   const navigate = useNavigate()
 
   const start = () => {
@@ -24,6 +29,7 @@ export default function HomePage() {
   const exit = () => {
     closeAudio()
     leaveFullscreen()
+    setShattering(false)
     setStage('landing')
   }
 
@@ -63,11 +69,21 @@ export default function HomePage() {
         )}
         {stage === 'eye' && (
           <div className="fixed inset-0 z-30 bg-[#050505]">
-            <EyeCodeEffect onEnd={() => setStage('reveal')} />
+            <EyeCodeEffect
+              onEnd={() => {
+                setShattering(true)
+                setStage('reveal')
+              }}
+            />
           </div>
         )}
-        {stage === 'reveal' && <PrankReveal name={name} onEnter={enter} />}
+        {stage === 'reveal' && (
+          <PrankReveal name={name} onEnter={enter} delay={shattering ? SHATTER_REVEAL_DELAY : 0} />
+        )}
       </div>
+
+      {/* The eye's black cracks and shatters, revealing the page underneath */}
+      {shattering && <ShatterTransition onDone={() => setShattering(false)} />}
     </>
   )
 }

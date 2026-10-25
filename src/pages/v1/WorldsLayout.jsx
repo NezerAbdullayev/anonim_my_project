@@ -33,7 +33,7 @@ export default function WorldsLayout() {
         onClick={() => navigate(worldPath(nextWorld(slug)))}
         className="fixed bottom-6 left-1/2 z-30 flex -translate-x-1/2 items-center gap-2 rounded-full border border-white/40 bg-black/40 px-5 py-2.5 font-sans text-sm font-semibold text-white backdrop-blur-md transition hover:bg-black/60"
       >
-        Başqa yerə at
+        Başqa səhifəni kəşf et
         <ArrowRight className="h-4 w-4" aria-hidden="true" />
       </button>
     </>

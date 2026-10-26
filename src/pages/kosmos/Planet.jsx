@@ -106,27 +106,31 @@ export default function Planet({ body, progress, scroll, engine, texture, moonTe
 
       {body.surface && <SurfacePhoto zoom={zoom} surface={body.surface} reduce={reduce} className="z-[595]" />}
 
-      <motion.div
+      {/* Positioning (incl. the centring translate) on the outer box: the animated x would override it */}
+      <div
         className={`pointer-events-none absolute bottom-[7vh] left-4 right-4 z-[600] sm:bottom-auto sm:top-1/2 sm:w-[30vw] sm:-translate-y-1/2 ${labelSide}`}
-        initial={false}
-        animate={
-          shown
-            ? { opacity: 1, x: 0, filter: 'blur(0px)' }
-            : { opacity: 0, x: reduce ? 0 : body.side * -24, filter: reduce ? 'blur(0px)' : 'blur(4px)' }
-        }
-        // Everything appears at once over 0.5 s, then stays for the HOLD_VH stretch of scroll
-        transition={{ duration: shown ? 0.5 : 0.3, ease: 'easeOut' }}
       >
-        <p className="text-xs uppercase tracking-[0.4em] text-sky-200/70">{body.tagline}</p>
-        <h2 className="font-display text-5xl font-black tracking-wide drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)] sm:text-7xl">
-          {body.name}
-        </h2>
-        <ul className="mt-3 space-y-1 font-mono text-xl text-slate-200 drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]">
-          {body.facts.map((f) => (
-            <li key={f}>{f}</li>
-          ))}
-        </ul>
-      </motion.div>
+        <motion.div
+          initial={false}
+          animate={
+            shown
+              ? { opacity: 1, x: 0, filter: 'blur(0px)' }
+              : { opacity: 0, x: reduce ? 0 : body.side * -24, filter: reduce ? 'blur(0px)' : 'blur(4px)' }
+          }
+          // Everything appears at once over 0.5 s, then stays for the HOLD_VH stretch of scroll
+          transition={{ duration: shown ? 0.5 : 0.3, ease: 'easeOut' }}
+        >
+          <p className="text-xs uppercase tracking-[0.4em] text-sky-200/70">{body.tagline}</p>
+          <h2 className="font-display text-5xl font-black tracking-wide drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)] sm:text-7xl">
+            {body.name}
+          </h2>
+          <ul className="mt-3 space-y-1 font-mono text-xl text-slate-200 drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]">
+            {body.facts.map((f) => (
+              <li key={f}>{f}</li>
+            ))}
+          </ul>
+        </motion.div>
+      </div>
     </>
   )
 }

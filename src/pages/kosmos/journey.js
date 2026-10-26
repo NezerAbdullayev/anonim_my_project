@@ -25,6 +25,23 @@ export const SUN = {
   surface: { src: '/images/sun-surface.jpg', caption: 'Günəşin səthi · Foto: NSO/NSF/AURA (CC BY 4.0)', tint: '#2a0a00' },
 }
 
+// Past Neptune: the supermassive black hole at the centre of our galaxy
+export const BLACK_HOLE = {
+  name: 'Oxatan A*',
+  tagline: 'Qalaktikamızın mərkəzindəki qara dəlik',
+  facts: [
+    'Kütlə: ~4,3 mln Günəş kütləsi',
+    'Bizdən: ~26 700 işıq ili',
+    'Hadisələr üfüqünün diametri: ~25 mln km',
+    'Ondan heç nə, hətta işıq da qaça bilməz',
+    'S2 ulduzu onun ətrafında ~16 ilə dövrə vurur',
+    '2020 Nobel mükafatı onun kəşfinə verildi',
+    'İlk şəkli 2022-də çəkildi (EHT)',
+  ],
+  // Real image, shown in the label (Event Horizon Telescope, CC BY 4.0)
+  photo: { src: '/images/sgr-a-eht.jpg', caption: 'Real şəkil · EHT Collaboration (CC BY 4.0)' },
+}
+
 export const BODIES = [
   {
     key: 'mercury',
@@ -303,6 +320,8 @@ const HOLD_VH = 100
 // Surface zooms (≈ 8 s of scroll each), the journey stands still meanwhile: the Sun's
 // before the trip starts, a planet's (one with `surface`) right after its hold
 const ZOOM_VH = 400
+// Past Neptune: the black hole, from first sight to the white hole (≈ 20 s of scroll)
+const BLACK_HOLE_VH = 1000
 
 const buildTrack = () => {
   const journey = [0]
@@ -331,12 +350,18 @@ const buildTrack = () => {
   vh += (1 - last) * BASE_VH
   journey.push(1)
   scroll.push(vh)
+  let blackHole = [vh, vh + BLACK_HOLE_VH]
+  vh += BLACK_HOLE_VH
+  journey.push(1)
+  scroll.push(vh)
   for (const key in zooms) zooms[key] = zooms[key].map((s) => s / vh)
-  return { vh: Math.round(vh), scroll: scroll.map((s) => s / vh), journey, zooms }
+  blackHole = blackHole.map((s) => s / vh)
+  return { vh: Math.round(vh), scroll: scroll.map((s) => s / vh), journey, zooms, blackHole }
 }
 
 /**
- * Scroll progress (0..1) → journey progress (0..1), the track height in vh, and
- * zooms: { [key]: [start, end] } scroll progress of each surface zoom.
+ * Scroll progress (0..1) → journey progress (0..1), the track height in vh,
+ * zooms: { [key]: [start, end] } scroll progress of each surface zoom, and
+ * blackHole: [start, end] scroll progress of the black hole after the journey.
  */
 export const TRACK = buildTrack()

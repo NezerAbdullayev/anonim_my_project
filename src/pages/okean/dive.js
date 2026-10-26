@@ -1,7 +1,8 @@
 // The dive from the surface to the bottom of the Mariana Trench. `at` = [start, end] of a
 // zone on the dive timeline (0 = surface, 1 = bottom). Real zones are very uneven (the sunlit
 // one is 200 m, the trench one ~5 000 m), so every zone gets about the same share of scroll
-// and the depth runs linearly inside its own range.
+// and the depth runs linearly inside its own range. A zone's `stops` (creatures, landmarks)
+// sit at their real `depth` (m) inside it.
 
 export const MAX_DEPTH = 10_935 // Challenger Deep, m
 
@@ -13,9 +14,10 @@ export const ZONES = [
     range: [0, 200],
     at: [0.05, 0.22],
     text: 'Günəş işığı buraya qədər çatır. Fitoplankton fotosintez edir və dəniz həyatının ~90%-i bu nazik qatda yaşayır.',
-    creatures: [
+    stops: [
       {
         key: 'clownfish',
+        depth: 25,
         name: 'Kloun balığı',
         tagline: 'Mərcan rifinin sakini',
         facts: [
@@ -29,6 +31,7 @@ export const ZONES = [
       },
       {
         key: 'dolphins',
+        depth: 60,
         name: 'Delfinlər',
         tagline: 'Okeanın ən ağıllı üzgüçüləri',
         facts: [
@@ -42,6 +45,7 @@ export const ZONES = [
       },
       {
         key: 'turtle',
+        depth: 95,
         name: 'Yaşıl dəniz tısbağası',
         tagline: 'Okean səyyahı',
         facts: [
@@ -55,6 +59,7 @@ export const ZONES = [
       },
       {
         key: 'sardines',
+        depth: 130,
         name: 'Sardina sürüsü',
         tagline: 'Milyonlarla balıq, bir bədən',
         facts: [
@@ -71,6 +76,7 @@ export const ZONES = [
       },
       {
         key: 'blue-whale',
+        depth: 170,
         name: 'Mavi balina',
         tagline: 'Bildiyimiz ən böyük heyvan',
         facts: [
@@ -91,6 +97,75 @@ export const ZONES = [
     range: [200, 1000],
     at: [0.22, 0.39],
     text: 'İşıq solğun göy parıltıya çevrilir, bitkilər yaşaya bilmir. Canlılar artıq özləri parlayır və ilk "dəniz qarı" yağır.',
+    stops: [
+      {
+        key: 'humboldt-squid',
+        depth: 300,
+        name: 'Humboldt kalmarı',
+        tagline: 'Balıqçıların "qırmızı şeytanı"',
+        facts: [
+          'Uzunluğu ~1,5–2 m-ə çatır',
+          'Dərisinin rəngini bir anda qırmızıdan ağa dəyişir',
+          'Bununla dəstədəki digər kalmarlara siqnal verir',
+          'Gündüz dərində gizlənir, gecə səthə yaxın ov edir',
+          'Dəstə ilə, bəzən yüzlərlə birlikdə ov edir',
+        ],
+        photo: {
+          src: '/images/okean/humboldt-squid.jpg',
+          caption: '~250 m, Kaliforniya · Foto: NOAA Photo Library (CC BY 2.0)',
+        },
+      },
+      {
+        key: 'hatchetfish',
+        depth: 450,
+        name: 'Balta balığı',
+        tagline: 'Qarnı parlayan balıq',
+        facts: [
+          'Qarnındakı işıq orqanları göy parlayır',
+          'Bu işıq yuxarıdan düşən zəif işığa uyğunlaşır',
+          'Belə olanda aşağıdakı yırtıcı onun kölgəsini görmür',
+          'Bədəni balta kimi nazik və gümüşüdür, cəmi ~5–10 sm',
+          'Açıq okean canlılarının ~75%-i işıq saça bilir',
+        ],
+        photo: {
+          src: '/images/okean/hatchetfish.jpg',
+          caption: 'Balta balığının parlayan qarnı · Foto: HulloThere (CC BY 4.0)',
+        },
+      },
+      {
+        key: 'anglerfish',
+        depth: 640,
+        name: 'Fənərli balıq',
+        tagline: 'Tilovla ov edən balıq',
+        facts: [
+          'Başındakı dəyişmiş üzgəc tilov kimi işləyir',
+          'Dibdə tərpənmədən yatıb ovunu gözləyir',
+          'Ağzı o qədər genişdir ki, özü boyda ovu uda bilir',
+          'Dərin dəniz növlərində tilovun ucu parlayır',
+          'Bəzi növlərdə kiçik erkək dişiyə yapışıb ömürlük onunla birləşir',
+        ],
+        photo: {
+          src: '/images/okean/anglerfish.jpg',
+          caption: 'Lophiodes beroe, ~640 m · Foto: NOAA Okeanos Explorer (ictimai mülkiyyət)',
+        },
+      },
+      {
+        key: 'siphonophore',
+        depth: 850,
+        name: 'Sifonofor',
+        tagline: 'Bir bədəndə minlərlə canlı',
+        facts: [
+          'Tək canlı kimi görünür, amma bir koloniyadır',
+          'Hər hissənin öz işi var: üzmək, ov tutmaq, həzm etmək',
+          'Bəzi növləri 40 m-dən uzundur, mavi balinadan da uzun',
+          'Bədəni demək olar ki, tam şəffafdır',
+        ],
+        photo: {
+          src: '/images/okean/siphonophore.jpg',
+          caption: 'Puerto-Riko yaxınlığı · Foto: NOAA Ocean Exploration (ictimai mülkiyyət)',
+        },
+      },
+    ],
   },
   {
     key: 'bathy',
@@ -99,6 +174,78 @@ export const ZONES = [
     range: [1000, 4000],
     at: [0.39, 0.58],
     text: 'Günəş işığı heç vaxt çatmır. Yeganə işıq canlıların öz parıltısıdır, su ~4 °C-dir.',
+    stops: [
+      {
+        key: 'sperm-whale',
+        depth: 1250,
+        name: 'Kaşalot',
+        tagline: 'Dərinliyin dalğıcı',
+        facts: [
+          '2 000 m-dən də dərinə enə bilir',
+          'Nəfəsini ~90 dəqiqəyə qədər saxlayır',
+          'Beyni yer üzündə ən böyük beyindir: ~8 kq',
+          'Qaranlıqda nəhəng kalmarı səslə tapıb ovlayır',
+          'Klik səsi heyvanlar aləmində ən güclü səsdir',
+        ],
+        photo: {
+          src: '/images/okean/sperm-whale.jpg',
+          caption: 'Ana və balası, Mavriki · Foto: Gabriel Barathieu (CC BY-SA 2.0)',
+        },
+      },
+      {
+        key: 'baikal',
+        kind: 'line',
+        depth: 1642,
+        name: 'Baykal gölünün dibi',
+        text: 'Dünyanın ən dərin gölü bu dərinlikdə bitir. Okeanın dibinə isə hələ 9 km-dən çox var.',
+      },
+      {
+        key: 'atolla',
+        depth: 2250,
+        name: 'Atolla meduzası',
+        tagline: '"Siqnalizasiya" meduzası',
+        facts: [
+          'Hücum olanda dairəvi göy işıq dalğaları saçır',
+          'Bu işıq daha böyük yırtıcını çağırır',
+          'O gəlib meduzaya hücum edəni qorxudur',
+          'Qırmızı rəngi burada görünmür: qırmızı işıq bu dərinliyə çatmır',
+        ],
+        photo: {
+          src: '/images/okean/atolla.jpg',
+          caption: 'Foto: Edith Widder, Operation Deep Scope 2005 (CC BY-SA 4.0)',
+        },
+      },
+      {
+        key: 'gulper-eel',
+        depth: 2900,
+        name: 'Pelikan ilanbalığı',
+        tagline: 'Ağzı bədənindən böyük',
+        facts: [
+          'Ağzı çanta kimi açılır, özündən böyük ovu tuta bilir',
+          'Quyruğunun ucunda kiçik çəhrayı işıq yanır',
+          'Uzunluğu ~0,75–1 m',
+          'Burada yemək azdır: tapdığını dərhal udur',
+        ],
+        photo: { src: '/images/okean/gulper-eel.jpg', caption: 'Foto: David Shale (CC BY 4.0)' },
+      },
+      {
+        key: 'titanic',
+        depth: 3800,
+        name: 'Titanik',
+        tagline: '1912-ci ildə batan gəmi',
+        facts: [
+          'Qalıqları ~3 800 m dərinlikdədir',
+          'Okeanın orta dərinliyi ~3 700 m-dir: Titanik demək olar ki, "ortada" yatır',
+          'Qalıqları yalnız 1985-ci ildə tapıldı',
+          'Burada təzyiq ~380 atm-dir',
+          'Bakteriyalar gəminin dəmirini yavaş-yavaş yeyir',
+        ],
+        photo: {
+          src: '/images/okean/titanic.jpg',
+          caption: 'Gəminin burnu, 2004 · Foto: NOAA/IFE/URI (ictimai mülkiyyət)',
+        },
+      },
+    ],
   },
   {
     key: 'abysso',
@@ -118,10 +265,17 @@ export const ZONES = [
   },
 ]
 
+// Each zone opens with its title card for TITLE of the dive (the depth waits at the zone's
+// top meanwhile), then the depth runs through the zone's range over the rest of it
+export const TITLE = 0.05
+
+const diveAt = (zone, m) =>
+  zone.at[0] + TITLE + ((m - zone.range[0]) / (zone.range[1] - zone.range[0])) * (zone.at[1] - zone.at[0] - TITLE)
+
 // The intro (0 m) before the first zone, the bottom (MAX_DEPTH) after the last
 export const DEPTH = {
-  points: [0, ...ZONES.map((z) => z.at[0]), ZONES.at(-1).at[1], 1],
-  meters: [0, ...ZONES.map((z) => z.range[0]), MAX_DEPTH, MAX_DEPTH],
+  points: [0, ...ZONES.flatMap((z) => [z.at[0], z.at[0] + TITLE]), ZONES.at(-1).at[1], 1],
+  meters: [0, ...ZONES.flatMap((z) => [z.range[0], z.range[0]]), MAX_DEPTH, MAX_DEPTH],
 }
 
 // Water colour [top, bottom of the screen] at dive points: turquoise → blue → indigo → black
@@ -131,25 +285,27 @@ export const WATER = {
   bottom: ['#0ea5e9', '#0369a1', '#1e3a8a', '#060a24', '#010206', '#000000'],
 }
 
-// Each zone opens with its title card for TITLE of the dive, then its creatures share the rest
-export const TITLE = 0.05
-
-// Every stop (a title card or a creature) is a point on the dive timeline; around it the
-// dive slows to a crawl for HOLD so the facts can be read
+// Every stop (a title card, a creature or a landmark) is a point on the dive timeline; around
+// it the dive slows to a crawl for HOLD so the facts can be read
 export const HOLD = 0.006
+// The longest a stop is on screen either side of its point (dive progress)
+const MAX_SPAN = 0.012
 
+// Place every stop at its real depth. It may stay on screen until halfway to its neighbours,
+// but not over the zone's title card (before it) or the next zone's (after it).
 for (const zone of ZONES) {
   zone.title = zone.at[0] + TITLE / 2
-  const creatures = zone.creatures ?? []
-  const step = (zone.at[1] - zone.at[0] - TITLE) / creatures.length
-  creatures.forEach((c, i) => {
-    c.at = zone.at[0] + TITLE + (i + 0.5) * step
-    c.span = step / 2 // on screen from at - span to at + span
-    c.side = i % 2 ? 'right' : 'left' // which side of the screen the photo is on
+  const stops = zone.stops ?? []
+  stops.forEach((s) => (s.at = diveAt(zone, s.depth)))
+  stops.forEach((s, i) => {
+    const before = i ? (s.at - stops[i - 1].at) / 2 : s.at - (zone.at[0] + TITLE)
+    const after = i < stops.length - 1 ? (stops[i + 1].at - s.at) / 2 : zone.at[1] - s.at
+    s.span = Math.min(MAX_SPAN, before, after) // on screen from at - span to at + span
+    s.side = i % 2 ? 'right' : 'left' // which side of the screen the photo is on
   })
 }
 
-const STOPS = ZONES.flatMap((z) => [z.title, ...(z.creatures ?? []).map((c) => c.at)])
+const STOPS = ZONES.flatMap((z) => [z.title, ...(z.stops ?? []).map((s) => s.at)])
 
 /** [start, end] of a stop's hold on the dive timeline. */
 export const holdRange = (at) => [at - HOLD / 2, at + HOLD / 2]

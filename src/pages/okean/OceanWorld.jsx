@@ -5,6 +5,7 @@ import MarineSnow from './MarineSnow.jsx'
 import DepthHud from './DepthHud.jsx'
 import ZoneTitle from './ZoneTitle.jsx'
 import Creature from './Creature.jsx'
+import Landmark from './Landmark.jsx'
 import { TRACK, ZONES } from './dive.js'
 
 /**
@@ -34,7 +35,13 @@ export default function OceanWorld() {
             <ZoneTitle key={zone.key} zone={zone} index={i} progress={progress} />
           ))}
           {ZONES.flatMap((zone) =>
-            (zone.creatures ?? []).map((c) => <Creature key={c.key} creature={c} progress={progress} />)
+            (zone.stops ?? []).map((s) =>
+              s.kind === 'line' ? (
+                <Landmark key={s.key} landmark={s} progress={progress} />
+              ) : (
+                <Creature key={s.key} creature={s} progress={progress} />
+              )
+            )
           )}
           <DepthHud progress={progress} />
 

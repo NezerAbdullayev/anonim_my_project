@@ -12,7 +12,8 @@ import { useSpaceEngine } from './useSpaceEngine.js'
 const TEXTURE_KEYS = ['sun', 'mercury', 'venus', 'earth', 'moon', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune']
 
 /**
- * Scroll-driven trip through the Solar System: start at the Sun, fly past every
+ * Scroll-driven trip through the Solar System: start at the Sun (zoom into its surface
+ * and back first), fly past every
  * planet (and through the asteroid belt) out to Neptune. At each planet the trip pauses
  * while its facts are on screen (see TRACK in journey.js for the scroll lengths).
  */
@@ -23,6 +24,9 @@ export default function SpaceWorld() {
   const journeyProgress = useTransform(scrollYProgress, TRACK.scroll, TRACK.journey)
   // Spring on top of it: soft and floaty, like coasting through space
   const progress = useSpring(journeyProgress, { stiffness: 55, damping: 22, restDelta: 0.0002 })
+  // 0 → zoomEnd: the Sun zoom; a stiffer spring so its quick return stays quick
+  const zoomProgress = useTransform(scrollYProgress, [0, TRACK.zoomEnd], [0, 1])
+  const zoom = useSpring(zoomProgress, { stiffness: 120, damping: 26, restDelta: 0.0005 })
   const { textures, engine } = useSpaceEngine(TEXTURE_KEYS)
   const loaded = Object.keys(textures).length
 
@@ -38,8 +42,8 @@ export default function SpaceWorld() {
   }, [])
   useMotionValueEvent(progress, 'change', (p) => musicRef.current?.setProgress(p))
 
-  // 0 → 0.035: intro title fades as the trip begins
-  const introOpacity = useTransform(progress, [0, 0.035], [1, 0])
+  // zoom 0 → 0.08: intro title fades as soon as the zoom begins
+  const introOpacity = useTransform(zoom, [0, 0.08], [1, 0])
   // 0.965 → 0.99: outro appears past Neptune
   const outroOpacity = useTransform(progress, [0.965, 0.99], [0, 1])
 
@@ -50,7 +54,7 @@ export default function SpaceWorld() {
         <div className="sticky top-0 h-screen overflow-hidden">
           <Starfield progress={progress} />
           <SunLight progress={progress} />
-          <Sun progress={progress} engine={engine} texture={textures.sun} />
+          <Sun progress={progress} zoom={zoom} engine={engine} texture={textures.sun} />
           {BODIES.map((body) => (
             <Planet
               key={body.key}

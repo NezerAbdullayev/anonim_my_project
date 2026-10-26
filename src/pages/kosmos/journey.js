@@ -251,11 +251,15 @@ export const holdRange = (body) => {
 // (≈ 2 s at a calm scrolling pace, ~50vh/s); raise HOLD_VH to keep facts up longer.
 const BASE_VH = 3600
 const HOLD_VH = 100
+// Before the trip starts: the Sun zoom (≈ 8 s of scroll), the journey stands still meanwhile
+const ZOOM_VH = 400
 
 const buildTrack = () => {
   const journey = [0]
   const scroll = [0]
-  let vh = 0
+  let vh = ZOOM_VH
+  journey.push(0)
+  scroll.push(vh)
   let last = 0
   for (const body of BODIES) {
     const [h0, h1] = holdRange(body)
@@ -270,8 +274,11 @@ const buildTrack = () => {
   vh += (1 - last) * BASE_VH
   journey.push(1)
   scroll.push(vh)
-  return { vh: Math.round(vh), scroll: scroll.map((s) => s / vh), journey }
+  return { vh: Math.round(vh), scroll: scroll.map((s) => s / vh), journey, zoomEnd: ZOOM_VH / vh }
 }
 
-/** Scroll progress (0..1) → journey progress (0..1), and the track height in vh. */
+/**
+ * Scroll progress (0..1) → journey progress (0..1), the track height in vh, and
+ * zoomEnd: the scroll progress where the Sun zoom ends and the journey begins.
+ */
 export const TRACK = buildTrack()

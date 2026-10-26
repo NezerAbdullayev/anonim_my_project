@@ -196,6 +196,13 @@ export const BODIES = [
       'Şimal qütbündə altıbucaqlı fırtına',
       'Cassini 2004–2017-də orbitdə olub',
     ],
+    // No solid surface: zoomed into the north polar hexagon (Cassini PIA20513, public domain)
+    surface: {
+      src: '/images/saturn-surface.jpg',
+      caption: 'Şimal qütbündəki altıbucaqlı fırtına · Foto: NASA/JPL-Caltech/SSI (Cassini)',
+      tint: '#0a0a0a',
+      position: '25% 35%',
+    },
     distanceKm: 1.43e9,
     at: [0.64, 0.78],
     size: 46,

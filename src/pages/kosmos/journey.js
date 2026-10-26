@@ -132,6 +132,13 @@ export const BODIES = [
       'Valles Marineris kanyonu: ~4 000 km',
       'Cazibə qüvvəsi Yerin ~38%-i qədər',
     ],
+    // Zoomed into after its facts: Mount Sharp seen by Curiosity (PIA19912, credit required)
+    surface: {
+      src: '/images/mars-surface.jpg',
+      caption: 'Marsın səthi (Şarp dağı) · Foto: NASA/JPL-Caltech/MSSS (Curiosity)',
+      tint: '#1c0f08',
+      position: '45% 60%',
+    },
     distanceKm: 227.9e6,
     at: [0.34, 0.46],
     size: 40,

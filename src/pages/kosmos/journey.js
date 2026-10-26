@@ -97,6 +97,14 @@ export const BODIES = [
       'Ox meyli 23,4° — fəsilləri yaradır',
       'Aya qədər: ~384 400 km',
     ],
+    // Zoomed into after its facts: Azerbaijan (NASA MODIS, 2020-04-20, public domain);
+    // `position` keeps Absheron/Baku in frame when a narrow screen crops the photo
+    surface: {
+      src: '/images/earth-azerbaijan.jpg',
+      caption: 'Azərbaycan kosmosdan · Foto: NASA (MODIS, 2020)',
+      tint: '#06101c',
+      position: '75% 55%',
+    },
     distanceKm: 149.6e6,
     at: [0.23, 0.36],
     size: 50,

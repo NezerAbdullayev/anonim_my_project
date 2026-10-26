@@ -37,7 +37,8 @@ export function SurfacePhoto({ zoom, surface, reduce, className = '' }) {
         src={surface.src}
         alt=""
         className="absolute inset-0 h-full w-full object-cover brightness-[0.85]"
-        style={{ scale }}
+        // Crops and zooms toward `position` (the part of the photo to keep in view)
+        style={{ scale, objectPosition: surface.position || 'center', transformOrigin: surface.position || 'center' }}
       />
       {/* Darker edges for depth */}
       <div

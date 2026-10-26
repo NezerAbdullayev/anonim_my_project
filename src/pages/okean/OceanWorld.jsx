@@ -4,7 +4,8 @@ import WaterColumn from './WaterColumn.jsx'
 import MarineSnow from './MarineSnow.jsx'
 import DepthHud from './DepthHud.jsx'
 import ZoneTitle from './ZoneTitle.jsx'
-import { DIVE_VH, ZONES } from './dive.js'
+import Creature from './Creature.jsx'
+import { TRACK, ZONES } from './dive.js'
 
 /**
  * Scroll-driven dive from the surface to the bottom of the Mariana Trench (10 935 m),
@@ -14,8 +15,10 @@ import { DIVE_VH, ZONES } from './dive.js'
 export default function OceanWorld() {
   const scrollRef = useRef(null)
   const { scrollYProgress } = useScroll({ container: scrollRef })
-  // Spring on top of the raw scroll: heavy and slow, like sinking through water
-  const progress = useSpring(scrollYProgress, { stiffness: 45, damping: 20, restDelta: 0.0002 })
+  // Scroll → dive: the track is stretched at every stop's hold so each fact gets its own scroll
+  const diveProgress = useTransform(scrollYProgress, TRACK.scroll, TRACK.dive)
+  // Spring on top of it: heavy and slow, like sinking through water
+  const progress = useSpring(diveProgress, { stiffness: 45, damping: 20, restDelta: 0.0002 })
 
   // 0 → 0.04: intro title fades as soon as the dive begins
   const introOpacity = useTransform(progress, [0, 0.04], [1, 0])
@@ -23,13 +26,16 @@ export default function OceanWorld() {
   return (
     <div ref={scrollRef} className="no-scrollbar fixed inset-0 overflow-y-auto bg-black font-sans text-white">
       {/* Tall scroll track; the sticky stage stays pinned while it scrolls */}
-      <div className="relative" style={{ height: `${DIVE_VH}vh` }}>
+      <div className="relative" style={{ height: `${TRACK.vh}vh` }}>
         <div className="sticky top-0 h-screen overflow-hidden">
           <WaterColumn progress={progress} />
           <MarineSnow progress={progress} />
           {ZONES.map((zone, i) => (
             <ZoneTitle key={zone.key} zone={zone} index={i} progress={progress} />
           ))}
+          {ZONES.flatMap((zone) =>
+            (zone.creatures ?? []).map((c) => <Creature key={c.key} creature={c} progress={progress} />)
+          )}
           <DepthHud progress={progress} />
 
           <motion.div

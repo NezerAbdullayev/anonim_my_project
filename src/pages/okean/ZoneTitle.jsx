@@ -1,19 +1,17 @@
 import { motion, useTransform } from 'framer-motion'
-import { ZONES } from './dive.js'
+import { TITLE, ZONES } from './dive.js'
 
-// How long a zone's title card stays up after the zone begins (dive progress)
-const SHOW = 0.07
-const FADE = 0.015
+const FADE = 0.012
 
 const groupDigits = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
 
 /** Title card as you enter a zone: its name, depth range and what the water is like there. */
 export default function ZoneTitle({ zone, index, progress }) {
   const start = zone.at[0]
-  // start → start + SHOW: the card fades in, stays, and fades out before the zone's creatures
-  const opacity = useTransform(progress, [start, start + FADE, start + SHOW - FADE, start + SHOW], [0, 1, 1, 0])
+  // start → start + TITLE: the card fades in, stays, and fades out before the zone's creatures
+  const opacity = useTransform(progress, [start, start + FADE, start + TITLE - FADE, start + TITLE], [0, 1, 1, 0])
   // and drifts up a little the whole time, like the water passing by
-  const y = useTransform(progress, [start, start + SHOW], ['6vh', '-6vh'])
+  const y = useTransform(progress, [start, start + TITLE], ['6vh', '-6vh'])
 
   return (
     <motion.section

@@ -33,11 +33,11 @@ export default function DepthHud({ progress }) {
 
   return (
     <>
-      <div className="pointer-events-none absolute left-4 top-4 z-[700] font-mono text-[11px] uppercase tracking-widest rounded-lg bg-slate-950/25 px-3 py-2 text-cyan-100/80 backdrop-blur-sm sm:left-6 sm:top-6 sm:text-xs">
+      <div className="pointer-events-none absolute left-4 top-4 z-[700] font-mono text-[11px] uppercase tracking-widest rounded-lg bg-slate-950/25 px-3 py-2 short:left-3 short:top-3 short:py-1 text-cyan-100/80 backdrop-blur-sm sm:left-6 sm:top-6 sm:text-xs">
         <p>Dərinlik</p>
-        <motion.p className="text-xl font-bold normal-case tracking-normal text-white sm:text-2xl">{depth}</motion.p>
+        <motion.p className="text-xl font-bold normal-case tracking-normal text-white sm:text-2xl short:text-base">{depth}</motion.p>
         <p className="mt-1 normal-case tracking-normal text-cyan-200 sm:hidden">{ZONES[current].name}</p>
-        <dl className="mt-2 grid grid-cols-[auto_auto] gap-x-3 gap-y-0.5">
+        <dl className="mt-2 short:hidden grid grid-cols-[auto_auto] gap-x-3 gap-y-0.5">
           <dt>Təzyiq</dt>
           <motion.dd className="normal-case tracking-normal text-white">{pressure}</motion.dd>
           <dt>Temperatur</dt>
@@ -47,7 +47,7 @@ export default function DepthHud({ progress }) {
         </dl>
       </div>
 
-      <div className="pointer-events-none absolute right-6 top-1/2 z-[700] hidden h-[60vh] -translate-y-1/2 items-stretch gap-4 font-mono text-xs sm:flex">
+      <div className="pointer-events-none absolute right-6 top-1/2 z-[700] hidden h-[60vh] short:h-[70vh] -translate-y-1/2 items-stretch gap-4 font-mono text-xs sm:flex">
         <ol className="flex flex-col justify-between gap-4 py-1">
           {ZONES.map((z, i) => (
             <li

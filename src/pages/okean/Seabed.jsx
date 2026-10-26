@@ -50,16 +50,16 @@ export default function Seabed({ progress, onRestart }) {
       </div>
 
       <motion.section
-        className="pointer-events-none absolute inset-0 z-[600] mx-auto flex max-w-xl flex-col items-center justify-center px-4 pb-24 text-center sm:pb-16"
+        className="pointer-events-none absolute inset-0 z-[600] mx-auto flex max-w-xl flex-col items-center justify-center px-4 pb-24 text-center sm:pb-16 short:pb-14"
         style={{ opacity: cardOpacity, y: cardY }}
         aria-label={BOTTOM.name}
       >
-        <p className="font-mono text-xs uppercase tracking-[0.3em] text-cyan-200/80">Dibə çatdıq</p>
-        <h2 className="mt-2 font-display text-4xl font-black drop-shadow-[0_2px_16px_rgba(0,0,0,0.9)] sm:text-6xl">
+        <p className="font-mono text-xs uppercase tracking-[0.3em] text-cyan-200/80 short:hidden">Dibə çatdıq</p>
+        <h2 className="mt-2 font-display text-4xl font-black drop-shadow-[0_2px_16px_rgba(0,0,0,0.9)] sm:text-6xl short:mt-0 short:text-3xl">
           {BOTTOM.name}
         </h2>
-        <p className="mt-2 text-sm text-cyan-100 sm:text-base">{BOTTOM.tagline}</p>
-        <ul className="mt-4 space-y-1.5 rounded-2xl bg-slate-950/40 p-4 text-left text-sm leading-snug text-slate-100 backdrop-blur-sm sm:p-5 sm:text-base">
+        <p className="mt-2 text-sm text-cyan-100 sm:text-base short:mt-0 short:text-xs">{BOTTOM.tagline}</p>
+        <ul className="mt-4 short:mt-2 short:space-y-0 short:p-2 short:text-xs space-y-1.5 rounded-2xl bg-slate-950/40 p-4 text-left text-sm leading-snug text-slate-100 backdrop-blur-sm sm:p-5 sm:text-base">
           {BOTTOM.facts.map((f) => (
             <li key={f} className="flex gap-2">
               <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-300" aria-hidden="true" />
@@ -71,7 +71,7 @@ export default function Seabed({ progress, onRestart }) {
           <motion.button
             type="button"
             onClick={onRestart}
-            className="pointer-events-auto mt-6 rounded-full bg-cyan-100 px-8 py-3 font-display text-lg font-bold text-slate-900 shadow-[0_0_24px_rgba(165,243,252,0.35)]"
+            className="pointer-events-auto mt-6 short:mt-2 short:py-1.5 short:text-base rounded-full bg-cyan-100 px-8 py-3 font-display text-lg font-bold text-slate-900 shadow-[0_0_24px_rgba(165,243,252,0.35)]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}

@@ -10,6 +10,9 @@ export default {
       colors: {
         neon: '#00ff66',
       },
+      screens: {
+        short: { raw: '(max-height: 520px)' }, // phones held sideways: compact layouts
+      },
     },
   },
   plugins: [],

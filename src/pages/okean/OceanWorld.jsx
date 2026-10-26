@@ -1,5 +1,6 @@
-import { useMemo, useRef, useState } from 'react'
-import { motion, useScroll, useSpring, useTransform } from 'framer-motion'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { motion, useMotionValueEvent, useScroll, useSpring, useTransform } from 'framer-motion'
+import { playOceanMusic } from '../../audio/oceanMusic.js'
 import WaterColumn from './WaterColumn.jsx'
 import MarineSnow from './MarineSnow.jsx'
 import Terrain from './Terrain.jsx'
@@ -16,12 +17,31 @@ import { rand } from '../shared/util.js'
  * through the ocean's five zones. The water darkens, the sun rays fade, marine snow
  * thickens and the gauge counts depth, pressure, temperature and light (see dive.js).
  *
- * The dive is remounted on "back to the surface", so every scroll position and spring
- * starts fresh at 0 m.
+ * Music lives here; the dive itself is remounted on "back to the surface", so every
+ * scroll position and spring starts fresh at 0 m.
  */
 export default function OceanWorld() {
   const [run, setRun] = useState(0)
-  return <Dive key={run} fromBottom={run > 0} onRestart={() => setRun((r) => r + 1)} />
+
+  // Background music for as long as this world is open; it sinks with the dive
+  const musicRef = useRef(null)
+  useEffect(() => {
+    const music = playOceanMusic()
+    musicRef.current = music
+    return () => {
+      music.stop()
+      musicRef.current = null
+    }
+  }, [])
+
+  return (
+    <Dive
+      key={run}
+      fromBottom={run > 0}
+      onProgress={(p) => musicRef.current?.setProgress(p)}
+      onRestart={() => setRun((r) => r + 1)}
+    />
+  )
 }
 
 /** Back from the bottom: a cloud of bubbles rushes up past the surface view and clears. */
@@ -52,13 +72,15 @@ function Bubbles() {
   )
 }
 
-function Dive({ fromBottom, onRestart }) {
+function Dive({ fromBottom, onProgress, onRestart }) {
   const scrollRef = useRef(null)
   const { scrollYProgress } = useScroll({ container: scrollRef })
   // Scroll → dive: the track is stretched at every stop's hold so each fact gets its own scroll
   const diveProgress = useTransform(scrollYProgress, TRACK.scroll, TRACK.dive)
   // Spring on top of it: heavy and slow, like sinking through water
   const progress = useSpring(diveProgress, { stiffness: 45, damping: 20, restDelta: 0.0002 })
+
+  useMotionValueEvent(progress, 'change', onProgress)
 
   // 0 → 0.04: intro title fades as soon as the dive begins
   const introOpacity = useTransform(progress, [0, 0.04], [1, 0])

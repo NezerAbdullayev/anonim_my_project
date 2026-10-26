@@ -39,7 +39,7 @@ export default function Creature({ creature, progress }) {
 
   return (
     <motion.section
-      className={`pointer-events-none absolute inset-0 z-[500] flex flex-col items-center justify-end gap-3 px-4 pb-28 sm:justify-center sm:gap-10 sm:pb-0 sm:pl-12 sm:pr-52 ${
+      className={`pointer-events-none absolute inset-0 z-[500] flex flex-col items-center justify-end gap-3 px-4 pb-28 sm:justify-center sm:gap-10 sm:pb-0 sm:pl-12 sm:pr-52 short:gap-4 short:pb-12 short:pl-4 ${
         side === 'right' ? 'sm:flex-row-reverse' : 'sm:flex-row'
       }`}
       style={{ y, opacity }}
@@ -50,19 +50,19 @@ export default function Creature({ creature, progress }) {
           src={photo.src}
           alt={name}
           decoding="async"
-          className="h-[30vh] w-full object-cover sm:h-auto"
+          className="h-[30vh] w-full object-cover sm:h-auto short:h-[60vh]"
           style={{ maskImage: MASK, WebkitMaskImage: MASK }}
           // a slow drift, like the animal moving in the current
           animate={{ x: [-8, 8, -8], y: [0, -6, 0] }}
           transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
         />
-        <figcaption className="mt-1 text-center font-mono text-[10px] text-slate-300/70">{photo.caption}</figcaption>
+        <figcaption className="mt-1 short:hidden text-center font-mono text-[10px] text-slate-300/70">{photo.caption}</figcaption>
       </motion.figure>
 
-      <div className="w-full max-w-md rounded-2xl bg-slate-950/35 p-4 backdrop-blur-sm sm:w-auto sm:p-6">
-        <h3 className="font-display text-2xl font-black sm:text-4xl">{name}</h3>
-        <p className="mt-1 text-sm text-cyan-200 sm:text-base">{tagline}</p>
-        <ul className="mt-3 space-y-1.5 text-sm leading-snug text-slate-100 sm:text-base">
+      <div className="w-full max-w-md rounded-2xl bg-slate-950/35 p-4 backdrop-blur-sm sm:w-auto sm:p-6 short:p-3">
+        <h3 className="font-display text-2xl font-black sm:text-4xl short:text-xl">{name}</h3>
+        <p className="mt-1 text-sm text-cyan-200 sm:text-base short:mt-0 short:text-xs">{tagline}</p>
+        <ul className="mt-3 space-y-1.5 text-sm leading-snug text-slate-100 sm:text-base short:mt-1.5 short:space-y-0.5 short:text-xs">
           {facts.map((text, i) => (
             <Fact
               key={text}

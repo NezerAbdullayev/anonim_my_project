@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion'
 import WaterColumn from './WaterColumn.jsx'
 import MarineSnow from './MarineSnow.jsx'
+import Terrain from './Terrain.jsx'
 import DepthHud from './DepthHud.jsx'
 import ZoneTitle from './ZoneTitle.jsx'
 import Creature from './Creature.jsx'
@@ -31,6 +32,7 @@ export default function OceanWorld() {
         <div className="sticky top-0 h-screen overflow-hidden">
           <WaterColumn progress={progress} />
           <MarineSnow progress={progress} />
+          <Terrain progress={progress} />
           {ZONES.map((zone, i) => (
             <ZoneTitle key={zone.key} zone={zone} index={i} progress={progress} />
           ))}

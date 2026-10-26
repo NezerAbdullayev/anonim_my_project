@@ -262,6 +262,13 @@ export const BODIES = [
       'Gün işığı Yerdəkindən ~900 dəfə zəif',
       'Voyager 2 1989-da yanından keçib',
     ],
+    // No solid surface: zoomed into the Great Dark Spot storm (Voyager 2, 1989, public domain)
+    surface: {
+      src: '/images/neptune-surface.jpg',
+      caption: 'Böyük Qaranlıq Ləkə · Foto: NASA/JPL (Voyager 2, 1989)',
+      tint: '#0a1240',
+      position: '45% 45%',
+    },
     distanceKm: 4.5e9,
     at: [0.87, 0.97],
     size: 44,

@@ -164,6 +164,13 @@ export const BODIES = [
       'Əsasən hidrogen və heliumdan ibarətdir',
       'Kütləsi qalan planetlərin cəmindən 2,5× çox',
     ],
+    // No solid surface: zoomed into the cloud tops of the Great Red Spot (Juno, 2017, public domain)
+    surface: {
+      src: '/images/jupiter-surface.jpg',
+      caption: 'Böyük Qırmızı Ləkə · Foto: NASA/JPL-Caltech/SwRI/MSSS/G. Eichstädt/S. Doran (Juno)',
+      tint: '#1f0a03',
+      position: '50% 45%',
+    },
     distanceKm: 778.5e6,
     at: [0.52, 0.65],
     size: 82,

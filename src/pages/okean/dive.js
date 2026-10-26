@@ -430,7 +430,21 @@ for (const zone of ZONES) {
   })
 }
 
-const STOPS = ZONES.flatMap((z) => [z.title, ...(z.stops ?? []).map((s) => s.at)])
+// The bottom, after the last zone: the floor comes up and the final card stays for its hold
+export const BOTTOM = {
+  at: 0.975,
+  name: 'Çellencer dərinliyi',
+  tagline: 'Okeanın ən dərin nöqtəsi · Mariana çökəkliyi, Sakit okean',
+  facts: [
+    'Dərinlik: ~10 935 m (ölçmələr 10 900–11 000 m arası dəyişir)',
+    'Təzyiq: ~1 090 atm',
+    'Su ~2,5 °C-dir və burada heç vaxt işıq olmayıb',
+    'Dibi yumşaq çöküntüdür: milyonlarla ilin "dəniz qarı"',
+    'Adını 1875-ci ildə ilk ölçməni aparan HMS Challenger gəmisindən alıb',
+  ],
+}
+
+const STOPS = [...ZONES.flatMap((z) => [z.title, ...(z.stops ?? []).map((s) => s.at)]), BOTTOM.at]
 
 /** [start, end] of a stop's hold on the dive timeline. */
 export const holdRange = (at) => [at - HOLD / 2, at + HOLD / 2]

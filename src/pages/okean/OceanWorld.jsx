@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion'
 import WaterColumn from './WaterColumn.jsx'
 import MarineSnow from './MarineSnow.jsx'
@@ -7,14 +7,52 @@ import DepthHud from './DepthHud.jsx'
 import ZoneTitle from './ZoneTitle.jsx'
 import Creature from './Creature.jsx'
 import Landmark from './Landmark.jsx'
+import Seabed from './Seabed.jsx'
 import { TRACK, ZONES } from './dive.js'
+import { rand } from '../shared/util.js'
 
 /**
  * Scroll-driven dive from the surface to the bottom of the Mariana Trench (10 935 m),
  * through the ocean's five zones. The water darkens, the sun rays fade, marine snow
  * thickens and the gauge counts depth, pressure, temperature and light (see dive.js).
+ *
+ * The dive is remounted on "back to the surface", so every scroll position and spring
+ * starts fresh at 0 m.
  */
 export default function OceanWorld() {
+  const [run, setRun] = useState(0)
+  return <Dive key={run} fromBottom={run > 0} onRestart={() => setRun((r) => r + 1)} />
+}
+
+/** Back from the bottom: a cloud of bubbles rushes up past the surface view and clears. */
+function Bubbles() {
+  const bubbles = useMemo(
+    () =>
+      Array.from({ length: 60 }, () => ({
+        left: rand(0, 100),
+        size: rand(10, 42),
+        duration: rand(1.6, 2.6),
+        delay: rand(0, 0.4),
+      })),
+    []
+  )
+  return (
+    <div className="pointer-events-none absolute inset-0 z-[900] overflow-hidden" aria-hidden="true">
+      {bubbles.map((b, i) => (
+        <motion.span
+          key={i}
+          className="absolute bottom-0 rounded-full border border-white/70 bg-white/20"
+          style={{ left: `${b.left}%`, width: b.size, height: b.size }}
+          initial={{ y: '0vh', opacity: 0.9 }}
+          animate={{ y: '-120vh', opacity: 0 }}
+          transition={{ duration: b.duration, delay: b.delay, ease: 'easeIn' }}
+        />
+      ))}
+    </div>
+  )
+}
+
+function Dive({ fromBottom, onRestart }) {
   const scrollRef = useRef(null)
   const { scrollYProgress } = useScroll({ container: scrollRef })
   // Scroll → dive: the track is stretched at every stop's hold so each fact gets its own scroll
@@ -45,7 +83,9 @@ export default function OceanWorld() {
               )
             )
           )}
+          <Seabed progress={progress} onRestart={onRestart} />
           <DepthHud progress={progress} />
+          {fromBottom && <Bubbles />}
 
           <motion.div
             className="pointer-events-none absolute inset-x-4 top-[34vh] z-[700] text-center"

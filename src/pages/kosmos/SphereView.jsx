@@ -2,6 +2,15 @@ import { useEffect, useRef } from 'react'
 import { createSphereRenderer, ringCanvases } from './sphere.js'
 
 const FRAME_MS = 80 // spin redraw rate: ~12 fps is plenty for a slow rotation
+const SCROLL_PAUSE_MS = 200 // no spin redraws until scrolling has stopped this long
+
+// A redraw is a 20–30 ms main-thread job: skipped while scrolling so it can't drop
+// scroll frames (the spin is far too slow for the pause to show)
+let lastScroll = 0
+if (typeof document !== 'undefined') {
+  // Capture: scroll events of the scroll container don't bubble
+  document.addEventListener('scroll', () => (lastScroll = performance.now()), { capture: true, passive: true })
+}
 
 /**
  * A rendered, slowly spinning planet (plus rings) filling its parent box: the box is
@@ -56,7 +65,7 @@ export default function SphereView({ engine, texture, px, options = {}, spin = 0
       const start = performance.now()
       let last = 0
       const loop = (now) => {
-        if (now - last >= FRAME_MS) {
+        if (now - last >= FRAME_MS && now - lastScroll >= SCROLL_PAUSE_MS) {
           last = now
           const t = (now - start) / 1000
           sphere.render(rot0 + spin * t, rot0 + cloudSpin * t)

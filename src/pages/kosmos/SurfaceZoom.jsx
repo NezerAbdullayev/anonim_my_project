@@ -25,12 +25,15 @@ export function SurfacePhoto({ zoom, surface, reduce, className = '' }) {
   const opacity = useTransform(zoom, [0.5, 0.78, GROWN, GROWN + RETURN / 2], [0, 1, 1, 0])
   // 0.5 → GROWN: keeps closing in on the surface; GROWN → 1: pulls back with the body
   const scale = useTransform(zoom, [0.5, GROWN, 1], reduce ? [1, 1, 1] : [1, 1.4, 1])
+  // Out of the render tree while transparent: otherwise every full-screen photo (even
+  // invisible) costs GPU time on each scroll frame
+  const display = useTransform(opacity, (o) => (o > 0 ? 'block' : 'none'))
 
-  // Always mounted (just transparent), so the photo is loaded before it's needed
+  // Always mounted (just not displayed), so the photo is loaded before it's needed
   return (
     <motion.div
       className={`pointer-events-none absolute inset-0 overflow-hidden ${className}`}
-      style={{ opacity, backgroundColor: surface.tint }}
+      style={{ opacity, display, backgroundColor: surface.tint }}
     >
       {/* Slightly dimmed so a full screen of it isn't glaring */}
       <motion.img

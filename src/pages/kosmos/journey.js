@@ -4,6 +4,25 @@
 // `size` = on-screen diameter at its closest calm moment (vmin), `px` = render
 // resolution cap of the disk (lowered to fit the screen), `side` = which side of the screen it passes on.
 
+// The Sun's label is on screen at the start and hides as soon as scrolling begins
+export const SUN = {
+  name: 'Günəş',
+  tagline: 'Sistemimizin ulduzu',
+  facts: [
+    'Diametr: ~1,39 mln km',
+    'İçinə ~1,3 mln Yer sığar',
+    'Sistemin kütləsinin ~99,86%-i',
+    'Yaşı: ~4,6 mlrd il',
+    'Səth: ~5 500 °C',
+    'Nüvə: ~15 mln °C',
+    'Tərkibi: ~73% hidrogen, ~25% helium',
+    'Növü: sarı cırtdan ulduz (G2V)',
+    'İşığı Yerə ~8 dəq 20 san-da çatır',
+    'Ekvatorda bir dövrə: ~25 gün',
+    'Qalaktika ətrafında bir dövrə: ~230 mln il',
+  ],
+}
+
 export const BODIES = [
   {
     key: 'mercury',

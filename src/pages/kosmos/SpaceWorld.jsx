@@ -5,7 +5,7 @@ import Starfield from './Starfield.jsx'
 import Sun, { SunLight } from './Sun.jsx'
 import Planet from './Planet.jsx'
 import JourneyHud from './JourneyHud.jsx'
-import { BODIES } from './journey.js'
+import { BODIES, TRACK } from './journey.js'
 import { useSpaceEngine } from './useSpaceEngine.js'
 
 // Route order = generation order, so the first bodies are ready first
@@ -13,13 +13,16 @@ const TEXTURE_KEYS = ['sun', 'mercury', 'venus', 'earth', 'moon', 'mars', 'jupit
 
 /**
  * Scroll-driven trip through the Solar System: start at the Sun, fly past every
- * planet (and through the asteroid belt) out to Neptune. ~1800vh of scroll ≈ 35 s.
+ * planet (and through the asteroid belt) out to Neptune. At each planet the trip pauses
+ * while its facts are on screen (see TRACK in journey.js for the scroll lengths).
  */
 export default function SpaceWorld() {
   const scrollRef = useRef(null)
   const { scrollYProgress } = useScroll({ container: scrollRef })
-  // Spring on top of raw scroll: soft and floaty, like coasting through space
-  const progress = useSpring(scrollYProgress, { stiffness: 55, damping: 22, restDelta: 0.0002 })
+  // Scroll → journey: the track is stretched at every planet's hold so each fact gets its own scroll
+  const journeyProgress = useTransform(scrollYProgress, TRACK.scroll, TRACK.journey)
+  // Spring on top of it: soft and floaty, like coasting through space
+  const progress = useSpring(journeyProgress, { stiffness: 55, damping: 22, restDelta: 0.0002 })
   const { textures, engine } = useSpaceEngine(TEXTURE_KEYS)
   const loaded = Object.keys(textures).length
 
@@ -43,7 +46,7 @@ export default function SpaceWorld() {
   return (
     <div ref={scrollRef} className="no-scrollbar fixed inset-0 overflow-y-auto bg-black font-sans text-white">
       {/* Tall scroll track; the sticky stage stays pinned while it scrolls */}
-      <div className="relative h-[1800vh]">
+      <div className="relative" style={{ height: `${TRACK.vh}vh` }}>
         <div className="sticky top-0 h-screen overflow-hidden">
           <Starfield progress={progress} />
           <SunLight progress={progress} />

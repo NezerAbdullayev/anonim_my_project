@@ -6,7 +6,7 @@ import { ASTEROID_BELT } from './journey.js'
 const NEAR_STARS = 700 // 3D stars that stream past while travelling
 const FAR_STARS = 2600 // painted sky (static, slow parallax)
 const CRUISE = 0.015 // drift speed when not scrolling
-const WARP = 9 // extra speed per unit of scroll velocity
+const WARP = 18 // extra speed per unit of scroll velocity (scaled to the 3600vh track)
 const MAX_ASTEROIDS = 70
 
 const rand = (a, b) => Math.random() * (b - a) + a

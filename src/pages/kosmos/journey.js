@@ -9,7 +9,19 @@ export const BODIES = [
     key: 'mercury',
     name: 'Merkuri',
     tagline: 'Günəşə ən yaxın planet',
-    facts: ['Günəşdən: 57,9 mln km', 'Diametr: 4 879 km', 'Bir il: 88 gün'],
+    facts: [
+      'Günəşdən: 57,9 mln km',
+      'Diametr: 4 879 km',
+      'Bir il: 88 gün',
+      'Bir gün (gündoğandan gündoğana): 176 Yer günü',
+      'Gündüz ~430 °C, gecə ~−180 °C',
+      'Peyki yoxdur',
+      'Atmosferi demək olar ki, yoxdur',
+      'Ən sürətli planet: orbitdə ~47 km/san',
+      'Səthi kraterlərlə doludur, Aya bənzəyir',
+      'Dəmir nüvəsi radiusunun ~85%-ni tutur',
+      'MESSENGER 2011–2015-də orbitdən öyrənib',
+    ],
     distanceKm: 57.9e6,
     at: [0.05, 0.16],
     size: 34,
@@ -22,7 +34,19 @@ export const BODIES = [
     key: 'venus',
     name: 'Venera',
     tagline: 'Ən isti planet',
-    facts: ['Günəşdən: 108,2 mln km', 'Diametr: 12 104 km', 'Səth: ~465 °C'],
+    facts: [
+      'Günəşdən: 108,2 mln km',
+      'Diametr: 12 104 km',
+      'Səth: ~465 °C',
+      'Bir il: 225 Yer günü',
+      'Bir gün: 243 Yer günü — ilindən uzun',
+      'Əksinə fırlanır: Günəş qərbdən doğur',
+      'Atmosfer: ~96% karbon qazı',
+      'Səth təzyiqi Yerdəkindən ~92 dəfə çox',
+      'Buludları sulfat turşusundandır',
+      'Peyki yoxdur',
+      'Gecə səmasında Aydan sonra ən parlaq',
+    ],
     distanceKm: 108.2e6,
     at: [0.14, 0.25],
     size: 46,
@@ -35,7 +59,19 @@ export const BODIES = [
     key: 'earth',
     name: 'Yer',
     tagline: 'Evimiz 🌍',
-    facts: ['Günəşdən: 149,6 mln km', 'Diametr: 12 742 km', 'Peyki: Ay'],
+    facts: [
+      'Günəşdən: 149,6 mln km',
+      'Diametr: 12 742 km',
+      'Peyki: Ay',
+      'Bir il: 365,25 gün',
+      'Ox ətrafında dövr: 23 saat 56 dəq',
+      'Səthin ~71%-i su ilə örtülüdür',
+      'Həyat olduğu bilinən yeganə planet',
+      'Yaşı: ~4,54 mlrd il',
+      'Hava: 78% azot, 21% oksigen',
+      'Ox meyli 23,4° — fəsilləri yaradır',
+      'Aya qədər: ~384 400 km',
+    ],
     distanceKm: 149.6e6,
     at: [0.23, 0.36],
     size: 50,
@@ -50,7 +86,19 @@ export const BODIES = [
     key: 'mars',
     name: 'Mars',
     tagline: 'Qırmızı planet',
-    facts: ['Günəşdən: 227,9 mln km', 'Diametr: 6 779 km', 'Olimp dağı: ~22 km'],
+    facts: [
+      'Günəşdən: 227,9 mln km',
+      'Diametr: 6 779 km',
+      'Olimp dağı: ~22 km',
+      'Bir il: 687 Yer günü',
+      'Bir gün: 24 saat 37 dəq',
+      'Peykləri: Fobos və Deymos',
+      'Rəngi səthdəki dəmir oksidindəndir (pas)',
+      'Atmosfer seyrəkdir: ~95% karbon qazı',
+      'Orta temperatur: ~−63 °C',
+      'Valles Marineris kanyonu: ~4 000 km',
+      'Cazibə qüvvəsi Yerin ~38%-i qədər',
+    ],
     distanceKm: 227.9e6,
     at: [0.34, 0.46],
     size: 40,
@@ -63,7 +111,19 @@ export const BODIES = [
     key: 'jupiter',
     name: 'Yupiter',
     tagline: 'Nəhəng qaz planeti',
-    facts: ['Günəşdən: 778,5 mln km', 'Diametr: 139 820 km', 'Böyük Qırmızı Ləkə'],
+    facts: [
+      'Günəşdən: 778,5 mln km',
+      'Diametr: 139 820 km',
+      'Böyük Qırmızı Ləkə',
+      'Ən böyük planet: içinə 1 300+ Yer sığar',
+      'Bir gün: ~9 saat 56 dəq — ən qısa',
+      'Bir il: ~11,9 Yer ili',
+      'Qırmızı Ləkə Yerdən böyük fırtınadır',
+      '90-dan çox peyki var',
+      'Ganimed — Günəş sisteminin ən böyük peyki',
+      'Əsasən hidrogen və heliumdan ibarətdir',
+      'Kütləsi qalan planetlərin cəmindən 2,5× çox',
+    ],
     distanceKm: 778.5e6,
     at: [0.52, 0.65],
     size: 82,
@@ -76,7 +136,19 @@ export const BODIES = [
     key: 'saturn',
     name: 'Saturn',
     tagline: 'Halqaların sahibi',
-    facts: ['Günəşdən: 1,43 mlrd km', 'Diametr: 116 460 km', 'Halqalar: buz və daş'],
+    facts: [
+      'Günəşdən: 1,43 mlrd km',
+      'Diametr: 116 460 km',
+      'Halqalar: buz və daş',
+      'Bir il: ~29,4 Yer ili',
+      'Bir gün: ~10 saat 33 dəq',
+      'Sıxlığı sudan azdır',
+      '270-dən çox peyki var — rekord',
+      'Titan: qalın atmosferi olan yeganə peyk',
+      'Halqalar ~280 000 km enində, çox nazik',
+      'Şimal qütbündə altıbucaqlı fırtına',
+      'Cassini 2004–2017-də orbitdə olub',
+    ],
     distanceKm: 1.43e9,
     at: [0.64, 0.78],
     size: 46,
@@ -90,7 +162,19 @@ export const BODIES = [
     key: 'uranus',
     name: 'Uran',
     tagline: 'Yan üstə fırlanan planet',
-    facts: ['Günəşdən: 2,87 mlrd km', 'Diametr: 50 724 km', 'Ox meyli: 98°'],
+    facts: [
+      'Günəşdən: 2,87 mlrd km',
+      'Diametr: 50 724 km',
+      'Ox meyli: 98°',
+      'Bir il: ~84 Yer ili',
+      'Bir gün: ~17 saat 14 dəq',
+      '1781-də teleskopla tapılan ilk planet',
+      'Mavi-yaşıl rəngi metan qazındandır',
+      'Ən soyuq atmosfer: ~−224 °C',
+      'Peyklərinə Şekspir qəhrəmanlarının adları verilib',
+      'Qütblərdə 42 il gündüz, 42 il gecə',
+      'Yalnız Voyager 2 (1986) yaxından keçib',
+    ],
     distanceKm: 2.87e9,
     at: [0.77, 0.88],
     size: 44,
@@ -104,7 +188,19 @@ export const BODIES = [
     key: 'neptune',
     name: 'Neptun',
     tagline: 'Ən uzaq planet',
-    facts: ['Günəşdən: 4,5 mlrd km', 'Diametr: 49 244 km', 'Küləklər: 2 100 km/saat'],
+    facts: [
+      'Günəşdən: 4,5 mlrd km',
+      'Diametr: 49 244 km',
+      'Küləklər: 2 100 km/saat',
+      'Bir il: ~165 Yer ili',
+      'Bir gün: ~16 saat 6 dəq',
+      'Riyazi hesabla tapılan ilk planet (1846)',
+      'Kəşfindən sonra ilk tam ilini 2011-də bitirdi',
+      'Ən böyük peyki Triton əksinə fırlanır',
+      'Tritonda azot geyzerləri var',
+      'Gün işığı Yerdəkindən ~900 dəfə zəif',
+      'Voyager 2 1989-da yanından keçib',
+    ],
     distanceKm: 4.5e9,
     at: [0.87, 0.97],
     size: 44,
@@ -118,8 +214,45 @@ export const BODIES = [
 // Asteroid belt between Mars and Jupiter (scroll range)
 export const ASTEROID_BELT = [0.45, 0.54]
 
-// Inside a slot: the planet calms down near the screen at HOLD[0]..HOLD[1] (label shown)
-export const HOLD = [0.45, 0.72]
+// Inside a slot: the planet calms down near the screen at HOLD[0]..HOLD[1] (label shown,
+// its facts appear one by one as you scroll through this stretch)
+export const HOLD = [0.35, 0.8]
 
 /** Point on the timeline where the body is at its calm, closest-but-not-passing moment. */
 export const holdAt = (body) => body.at[0] + ((HOLD[0] + HOLD[1]) / 2) * (body.at[1] - body.at[0])
+
+/** [start, end] of a body's hold on the journey timeline. */
+export const holdRange = (body) => {
+  const span = body.at[1] - body.at[0]
+  return [body.at[0] + HOLD[0] * span, body.at[0] + HOLD[1] * span]
+}
+
+// Scroll track. Travel between planets: the whole journey would be BASE_VH long;
+// each hold (all facts on screen) is instead HOLD_VH of scroll
+// (≈ 2 s at a calm scrolling pace, ~50vh/s); raise HOLD_VH to keep facts up longer.
+const BASE_VH = 3600
+const HOLD_VH = 100
+
+const buildTrack = () => {
+  const journey = [0]
+  const scroll = [0]
+  let vh = 0
+  let last = 0
+  for (const body of BODIES) {
+    const [h0, h1] = holdRange(body)
+    vh += (h0 - last) * BASE_VH
+    journey.push(h0)
+    scroll.push(vh)
+    vh += HOLD_VH
+    journey.push(h1)
+    scroll.push(vh)
+    last = h1
+  }
+  vh += (1 - last) * BASE_VH
+  journey.push(1)
+  scroll.push(vh)
+  return { vh: Math.round(vh), scroll: scroll.map((s) => s / vh), journey }
+}
+
+/** Scroll progress (0..1) → journey progress (0..1), and the track height in vh. */
+export const TRACK = buildTrack()

@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { motion, useMotionValueEvent, useTransform } from 'framer-motion'
+import { motion, useMotionValueEvent, useReducedMotion, useTransform } from 'framer-motion'
 import SphereView from './SphereView.jsx'
-import { HOLD } from './journey.js'
+import { holdRange } from './journey.js'
 
 // Perspective: on-screen scale = 1 / distance; interpolating the distance on a log
 // scale gives the steady "it keeps getting closer" feel of a real approach
@@ -10,13 +10,17 @@ const logLerp = (a, b, t) => Math.exp(Math.log(a) + (Math.log(b) - Math.log(a)) 
 /** One body on the route: approaches from far away, lingers, then rushes past. */
 export default function Planet({ body, progress, engine, texture, moonTexture }) {
   const [t0, t1] = body.at
-  const span = t1 - t0
-  const h0 = t0 + HOLD[0] * span
-  const h1 = t0 + HOLD[1] * span
+  const [h0, h1] = holdRange(body)
 
   // Only build the (memory-heavy) renderer while the planet is on or near the screen
   const [near, setNear] = useState(false)
-  useMotionValueEvent(progress, 'change', (p) => setNear(p > t0 - 0.04 && p < t1 + 0.01))
+  // h0 → h1: the label with all its facts is on screen (HOLD_VH of scroll)
+  const [shown, setShown] = useState(false)
+  useMotionValueEvent(progress, 'change', (p) => {
+    setNear(p > t0 - 0.04 && p < t1 + 0.01)
+    setShown(p >= h0 && p <= h1)
+  })
+  const reduce = useReducedMotion()
 
   const scale = useTransform(progress, (p) => {
     if (p <= t0) return 0.02
@@ -42,8 +46,6 @@ export default function Planet({ body, progress, engine, texture, moonTexture })
   const opacity = useTransform(progress, [t0, t0 + 0.012, t1 - 0.02, t1], [0, 1, 1, 0])
   // Closer bodies are drawn on top
   const zIndex = useTransform(scale, (s) => Math.round(s * 100))
-  // Label: h0 → h1 (with short fades)
-  const labelOpacity = useTransform(progress, [h0 - 0.012, h0 + 0.004, h1 - 0.004, h1 + 0.01], [0, 1, 1, 0])
 
   const size = `${body.size}vmin`
   // Label on the opposite side of the screen from the planet (at the bottom on phones)
@@ -92,14 +94,21 @@ export default function Planet({ body, progress, engine, texture, moonTexture })
       </motion.div>
 
       <motion.div
-        className={`pointer-events-none absolute bottom-[16vh] left-4 right-4 z-[600] sm:bottom-auto sm:top-1/2 sm:w-[30vw] sm:-translate-y-1/2 ${labelSide}`}
-        style={{ opacity: labelOpacity }}
+        className={`pointer-events-none absolute bottom-[7vh] left-4 right-4 z-[600] sm:bottom-auto sm:top-1/2 sm:w-[30vw] sm:-translate-y-1/2 ${labelSide}`}
+        initial={false}
+        animate={
+          shown
+            ? { opacity: 1, x: 0, filter: 'blur(0px)' }
+            : { opacity: 0, x: reduce ? 0 : body.side * -24, filter: reduce ? 'blur(0px)' : 'blur(4px)' }
+        }
+        // Everything appears at once over 0.5 s, then stays for the HOLD_VH stretch of scroll
+        transition={{ duration: shown ? 0.5 : 0.3, ease: 'easeOut' }}
       >
         <p className="text-xs uppercase tracking-[0.4em] text-sky-200/70">{body.tagline}</p>
         <h2 className="font-display text-5xl font-black tracking-wide drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)] sm:text-7xl">
           {body.name}
         </h2>
-        <ul className="mt-3 space-y-1 font-mono text-sm text-slate-200 drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)] sm:text-base">
+        <ul className="mt-3 space-y-1 font-mono text-xl text-slate-200 drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]">
           {body.facts.map((f) => (
             <li key={f}>{f}</li>
           ))}

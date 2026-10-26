@@ -21,6 +21,8 @@ export const SUN = {
     'Ekvatorda bir dövrə: ~25 gün',
     'Qalaktika ətrafında bir dövrə: ~230 mln il',
   ],
+  // Zoomed into on the first scroll (real photo: Inouye Solar Telescope, CC BY 4.0)
+  surface: { src: '/images/sun-surface.jpg', caption: 'Günəşin səthi · Foto: NSO/NSF/AURA (CC BY 4.0)', tint: '#2a0a00' },
 }
 
 export const BODIES = [
@@ -41,6 +43,8 @@ export const BODIES = [
       'Dəmir nüvəsi radiusunun ~85%-ni tutur',
       'MESSENGER 2011–2015-də orbitdən öyrənib',
     ],
+    // Zoomed into after its facts (real photo: MESSENGER, Debussy region, public domain)
+    surface: { src: '/images/mercury-surface.jpg', caption: 'Merkurinin səthi · Foto: NASA/JHUAPL/Carnegie (MESSENGER)', tint: '#0b0b0c' },
     distanceKm: 57.9e6,
     at: [0.05, 0.16],
     size: 34,
@@ -251,12 +255,14 @@ export const holdRange = (body) => {
 // (≈ 2 s at a calm scrolling pace, ~50vh/s); raise HOLD_VH to keep facts up longer.
 const BASE_VH = 3600
 const HOLD_VH = 100
-// Before the trip starts: the Sun zoom (≈ 8 s of scroll), the journey stands still meanwhile
+// Surface zooms (≈ 8 s of scroll each), the journey stands still meanwhile: the Sun's
+// before the trip starts, a planet's (one with `surface`) right after its hold
 const ZOOM_VH = 400
 
 const buildTrack = () => {
   const journey = [0]
   const scroll = [0]
+  const zooms = { sun: [0, ZOOM_VH] }
   let vh = ZOOM_VH
   journey.push(0)
   scroll.push(vh)
@@ -269,16 +275,23 @@ const buildTrack = () => {
     vh += HOLD_VH
     journey.push(h1)
     scroll.push(vh)
+    if (body.surface) {
+      zooms[body.key] = [vh, vh + ZOOM_VH]
+      vh += ZOOM_VH
+      journey.push(h1)
+      scroll.push(vh)
+    }
     last = h1
   }
   vh += (1 - last) * BASE_VH
   journey.push(1)
   scroll.push(vh)
-  return { vh: Math.round(vh), scroll: scroll.map((s) => s / vh), journey, zoomEnd: ZOOM_VH / vh }
+  for (const key in zooms) zooms[key] = zooms[key].map((s) => s / vh)
+  return { vh: Math.round(vh), scroll: scroll.map((s) => s / vh), journey, zooms }
 }
 
 /**
  * Scroll progress (0..1) → journey progress (0..1), the track height in vh, and
- * zoomEnd: the scroll progress where the Sun zoom ends and the journey begins.
+ * zooms: { [key]: [start, end] } scroll progress of each surface zoom.
  */
 export const TRACK = buildTrack()

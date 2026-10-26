@@ -7,6 +7,7 @@ import Planet from './Planet.jsx'
 import JourneyHud from './JourneyHud.jsx'
 import { BODIES, TRACK } from './journey.js'
 import { useSpaceEngine } from './useSpaceEngine.js'
+import { useZoom } from './SurfaceZoom.jsx'
 
 // Route order = generation order, so the first bodies are ready first
 const TEXTURE_KEYS = ['sun', 'mercury', 'venus', 'earth', 'moon', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune']
@@ -24,9 +25,8 @@ export default function SpaceWorld() {
   const journeyProgress = useTransform(scrollYProgress, TRACK.scroll, TRACK.journey)
   // Spring on top of it: soft and floaty, like coasting through space
   const progress = useSpring(journeyProgress, { stiffness: 55, damping: 22, restDelta: 0.0002 })
-  // 0 → zoomEnd: the Sun zoom; a stiffer spring so its quick return stays quick
-  const zoomProgress = useTransform(scrollYProgress, [0, TRACK.zoomEnd], [0, 1])
-  const zoom = useSpring(zoomProgress, { stiffness: 120, damping: 26, restDelta: 0.0005 })
+  // Before the journey: the Sun zoom (planets run their own, see Planet.jsx)
+  const zoom = useZoom(scrollYProgress, TRACK.zooms.sun)
   const { textures, engine } = useSpaceEngine(TEXTURE_KEYS)
   const loaded = Object.keys(textures).length
 
@@ -60,6 +60,7 @@ export default function SpaceWorld() {
               key={body.key}
               body={body}
               progress={progress}
+              scroll={scrollYProgress}
               engine={engine}
               texture={textures[body.key]}
               moonTexture={textures.moon}

@@ -1,22 +1,11 @@
 import { useState } from 'react'
 import { motion, useMotionValueEvent, useReducedMotion, useTransform } from 'framer-motion'
 import SphereView from './SphereView.jsx'
+import { SurfacePhoto, zoomScale } from './SurfaceZoom.jsx'
 import { SUN } from './journey.js'
-
-// Real photo: sunspot and granulation, Inouye Solar Telescope (NSO/NSF/AURA, CC BY 4.0)
-const SURFACE_URL = '/images/sun-surface.jpg'
 
 const END = 0.08 // the Sun is out of frame by here
 const LABEL_END = 0.001 // the label hides as soon as the trip starts moving
-// Zoom (0..1, before the journey): grows to ZOOM_MAX, then snaps back over the last
-// RETURN of it (15vh of the 400vh zoom ≈ 0.3 s)
-const ZOOM_MAX = 12
-const RETURN = 0.0375
-const GROWN = 1 - RETURN
-
-/** Sun's size factor from the zoom: steady exponential growth, then a quick return. */
-const zoomScale = (z) =>
-  z < GROWN ? Math.pow(ZOOM_MAX, z / GROWN) : Math.pow(ZOOM_MAX, 1 - (z - GROWN) / RETURN)
 
 /**
  * The journey starts facing the Sun. Scrolling first zooms into it until its surface
@@ -61,7 +50,7 @@ export default function Sun({ progress, zoom, engine, texture }) {
         {texture && <SphereView engine={engine} texture={texture} px={560} spin={0.008} options={{ emissive: true, pitch: 0.1 }} />}
       </motion.div>
 
-      <SunSurface zoom={zoom} reduce={reduce} />
+      <SurfacePhoto zoom={zoom} surface={SUN.surface} reduce={reduce} className="z-20" />
 
       {/* Same look as the planet labels, on the left (at the bottom on phones) */}
       <motion.div
@@ -85,32 +74,6 @@ export default function Sun({ progress, zoom, engine, texture }) {
         </ul>
       </motion.div>
     </>
-  )
-}
-
-/** Full-screen photo of the real surface, shown while the zoom is deep in. */
-function SunSurface({ zoom, reduce }) {
-  // 0.5 → 0.78: fades in as the blurry disk fills the screen; out during the first half of the return
-  const opacity = useTransform(zoom, [0.5, 0.78, GROWN, GROWN + RETURN / 2], [0, 1, 1, 0])
-  // 0.5 → GROWN: keeps closing in on the surface; GROWN → 1: pulls back with the Sun
-  const scale = useTransform(zoom, [0.5, GROWN, 1], reduce ? [1, 1, 1] : [1, 1.4, 1])
-
-  // Always mounted (just transparent), so the photo is loaded before it's needed
-  return (
-    <motion.div className="pointer-events-none absolute inset-0 z-20 overflow-hidden bg-[#2a0a00]" style={{ opacity }}>
-      {/* Slightly dimmed so a full screen of it isn't glaring */}
-      <motion.img
-        src={SURFACE_URL}
-        alt=""
-        className="absolute inset-0 h-full w-full object-cover brightness-[0.85]"
-        style={{ scale }}
-      />
-      {/* Darker edges for depth */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0)_45%,rgba(40,6,0,0.6)_100%)]" />
-      <p className="absolute bottom-2 right-3 font-mono text-[10px] text-white/60">
-        Günəşin səthi · Foto: NSO/NSF/AURA (CC BY 4.0)
-      </p>
-    </motion.div>
   )
 }
 

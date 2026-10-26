@@ -70,6 +70,8 @@ export const BODIES = [
       'Peyki yoxdur',
       'Gecə səmasında Aydan sonra ən parlaq',
     ],
+    // Zoomed into after its facts (Magellan radar, 3D view of Sapas Mons, public domain)
+    surface: { src: '/images/venus-surface.jpg', caption: 'Veneranın səthi (Sapas dağı) · Radar: NASA/JPL (Magellan)', tint: '#1a0c02' },
     distanceKm: 108.2e6,
     at: [0.14, 0.25],
     size: 46,

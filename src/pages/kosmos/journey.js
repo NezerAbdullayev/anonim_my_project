@@ -229,6 +229,13 @@ export const BODIES = [
       'Qütblərdə 42 il gündüz, 42 il gecə',
       'Yalnız Voyager 2 (1986) yaxından keçib',
     ],
+    // No solid surface and no close-up beyond Voyager's blank disk: the planet, its rings
+    // and polar cap in infrared (James Webb, 2023, CC BY 4.0, credit required)
+    surface: {
+      src: '/images/uranus-surface.jpg',
+      caption: 'Uran və halqaları (infraqırmızı) · Foto: NASA, ESA, CSA, STScI, J. DePasquale (Webb, CC BY 4.0)',
+      tint: '#02060c',
+    },
     distanceKm: 2.87e9,
     at: [0.77, 0.88],
     size: 44,

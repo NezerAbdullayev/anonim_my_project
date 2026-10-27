@@ -69,6 +69,13 @@ export const ERAS = [
     name: 'Bugünkü Bakı',
     years: [1991.8, LAST_YEAR],
     at: [0.82, 0.96],
+    // 2010–2012 changed the skyline the most: they get the most scroll
+    anchors: [
+      [1991.8, 0],
+      [2010.5, 0.35],
+      [2012.6, 0.9],
+      [LAST_YEAR, 1],
+    ],
     text: 'Müstəqil Azərbaycanın paytaxtı. Gecələr təpənin üstündə Alov qüllələri yanır.',
     titleClass: 'font-display text-cyan-100 drop-shadow-[0_0_18px_rgba(103,232,249,0.8)]',
   },
@@ -373,6 +380,70 @@ export const BUILDINGS = [
     base: 296,
     top: 268,
   },
+  {
+    key: 'tv-tower',
+    era: 'today',
+    year: 1996.51,
+    when: '6 iyul 1996',
+    name: 'TV qülləsi',
+    text: '310 m hündürlüyündə qüllə: 1979-da başlanan tikinti illərlə dayanır, nəhayət 1996-da açılır.',
+    x: 360,
+    base: 104,
+    top: 30,
+  },
+  {
+    key: 'flag-square',
+    era: 'today',
+    year: 2010.67,
+    when: '2010',
+    name: 'Dövlət Bayrağı Meydanı',
+    text: 'Bayıl burnunda 162 m-lik dirəkdə üçrəngli bayraq dalğalanır: Cümhuriyyətin bayrağı yenidən şəhərin üstündədir.',
+    x: 110,
+    base: 172,
+    top: 70,
+  },
+  {
+    key: 'crystal-hall',
+    era: 'today',
+    year: 2010.67,
+    silent: true, // on the same cape as the flag
+    x: 175,
+    base: 177,
+  },
+  {
+    key: 'white-city',
+    era: 'today',
+    year: 2011.2,
+    when: '2010-cu illər',
+    name: 'Ağ şəhər',
+    text: 'Qara şəhərin köhnə zavodlarının yerində yeni, ağ bir məhəllə salınır.',
+    x: 1170,
+    base: 190,
+    top: 140,
+  },
+  {
+    key: 'flame-towers',
+    era: 'today',
+    year: 2011.9, // finished in 2012; its note comes a little earlier to leave room
+    when: '2012',
+    name: 'Alov qüllələri',
+    text: 'Üç qüllə, ən hündürü 182 m. Gecələr fasadları alov kimi yanır: "Odlar yurdu" yenə odlar içindədir.',
+    x: 600,
+    base: 157,
+    top: 84,
+    line: 1, // a short line: the towers are tall, the note would reach the year counter
+  },
+  {
+    key: 'heydar-aliyev-center',
+    era: 'today',
+    year: 2012.36,
+    when: '10 may 2012',
+    name: 'Heydər Əliyev Mərkəzi',
+    text: 'Zaha Hadidin layihəsi: bircə düz xətti olmayan, dalğa kimi əyilən ağ bina.',
+    x: 1060,
+    base: 92,
+    top: 58,
+  },
 ]
 
 // One day across 900 years. Colours at timeline points (era middles):
@@ -437,7 +508,12 @@ for (const era of ERAS) {
 
 export const NOTES = BUILDINGS.filter((b) => !b.silent)
 
-const STOPS = [...ERAS.map((e) => e.title), ...NOTES.map((b) => b.at), ...MEMORIALS.map((m) => m.at)].sort((a, b) => a - b)
+// The final card, after today's era: time stands still there for one more hold
+export const FINALE = 0.98
+
+const STOPS = [...ERAS.map((e) => e.title), ...NOTES.map((b) => b.at), ...MEMORIALS.map((m) => m.at), FINALE].sort(
+  (a, b) => a - b
+)
 
 /** [start, end] of a stop's hold on the timeline. */
 export const holdRange = (at) => [at - HOLD / 2, at + HOLD / 2]

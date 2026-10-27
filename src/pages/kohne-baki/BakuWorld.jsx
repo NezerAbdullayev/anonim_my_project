@@ -1,5 +1,5 @@
-import { useRef } from 'react'
-import { motion, useScroll, useSpring, useTransform } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
+import { animate, motion, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
 import Sky from './Sky.jsx'
 import Panorama, { Notes } from './Panorama.jsx'
 import Sea from './Sea.jsx'
@@ -7,6 +7,7 @@ import EraStyle from './EraStyle.jsx'
 import EraTitle from './EraTitle.jsx'
 import YearCounter from './YearCounter.jsx'
 import Memorials from './Memorial.jsx'
+import Finale from './Finale.jsx'
 import { ERAS, TRACK } from './timeline.js'
 
 /**
@@ -21,6 +22,36 @@ export default function BakuWorld() {
   const timeProgress = useTransform(scrollYProgress, TRACK.scroll, TRACK.time)
   // Spring on top of it: smooth, like the hands of a clock catching up
   const time = useSpring(timeProgress, { stiffness: 60, damping: 22, restDelta: 0.0002 })
+
+  // "Wind time back": the scroll runs back to the top by itself, so the whole thousand years
+  // play in reverse and the city un-builds itself. Any wheel or touch hands control back.
+  const reduced = useReducedMotion()
+  const [rewinding, setRewinding] = useState(false)
+  const rewindRef = useRef(null)
+  const rewind = () => {
+    const el = scrollRef.current
+    if (reduced) {
+      el.scrollTo({ top: 0 })
+      return
+    }
+    setRewinding(true)
+    rewindRef.current = animate(el.scrollTop, 0, {
+      duration: 8,
+      ease: 'easeInOut',
+      onUpdate: (v) => (el.scrollTop = v),
+      onComplete: () => setRewinding(false),
+    })
+  }
+  useEffect(() => {
+    if (!rewinding) return
+    const stop = () => {
+      rewindRef.current?.stop()
+      setRewinding(false)
+    }
+    const events = ['wheel', 'touchstart', 'keydown']
+    events.forEach((ev) => window.addEventListener(ev, stop, { passive: true }))
+    return () => events.forEach((ev) => window.removeEventListener(ev, stop))
+  }, [rewinding])
 
   // 0 → 0.03: intro title fades as soon as time starts moving
   const introOpacity = useTransform(time, [0, 0.03], [1, 0])
@@ -37,6 +68,12 @@ export default function BakuWorld() {
           <EraStyle time={time} />
           <Notes time={time} />
           <Memorials time={time} />
+          <Finale time={time} onRewind={rewind} rewinding={rewinding} />
+          {rewinding && (
+            <p className="pointer-events-none absolute inset-x-0 bottom-24 z-[700] text-center font-old text-lg text-white/90 drop-shadow-[0_1px_8px_rgba(0,0,0,0.9)]">
+              Zaman geri fırlanır…
+            </p>
+          )}
           {ERAS.map((era) => (
             <EraTitle key={era.key} era={era} progress={time} />
           ))}

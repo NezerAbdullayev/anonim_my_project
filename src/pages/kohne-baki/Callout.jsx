@@ -6,12 +6,14 @@ const MINIATURE = 'border-2 border-double border-[#d4a72c] bg-[#f3e2c0]/95 text-
 const ENGRAVING = 'border border-[#3e2a14] bg-[#e9dcc0]/95 text-[#2e1f0e] font-old'
 const POSTCARD = 'border border-[#8a6a3a] bg-[#fbf3e0]/95 text-[#3a2a1a] font-old outline outline-1 outline-offset-2 outline-dashed outline-[#8a6a3a]/60'
 const POSTER = 'border-l-8 border-[#c0392b] bg-[#f4e9d8]/95 text-[#1f1a17] font-sans'
+const NEON = 'border border-cyan-300/60 bg-slate-950/85 text-cyan-50 font-sans shadow-[0_0_18px_rgba(103,232,249,0.35)]'
 const LOOK = {
   medieval: MINIATURE,
   oil: ENGRAVING,
   millionaires: POSTCARD,
   republic: POSTCARD,
   soviet: POSTER,
+  today: NEON,
 }
 
 /**
@@ -20,7 +22,7 @@ const LOOK = {
  * moves with it when the camera pans.
  */
 export default function Callout({ building, time, left, top }) {
-  const { at, span, era, when, name, text, x } = building
+  const { at, span, era, when, name, text, x, line = 6 } = building
   // Near the panorama's ends the label leans inward, so it never runs off the screen
   const side = x < 300 ? 'left-[-2rem]' : x > 1140 ? 'right-[-2rem]' : ''
   const [h0, h1] = holdRange(at)
@@ -39,8 +41,8 @@ export default function Callout({ building, time, left, top }) {
       aria-label={name}
     >
       <motion.div
-        className={`absolute bottom-[6vh] w-56 rounded-md px-3 py-2 text-center shadow-lg sm:w-64 ${side} ${LOOK[era] ?? MINIATURE}`}
-        style={{ y }}
+        style={{ y, bottom: `${line}vh` }}
+        className={`absolute w-56 rounded-md px-3 py-2 text-center shadow-lg sm:w-64 ${side} ${LOOK[era] ?? MINIATURE}`}
       >
         {era === 'republic' && (
           // the Republic's colours across the top of its notes
@@ -54,7 +56,10 @@ export default function Callout({ building, time, left, top }) {
         <h3 className="text-base font-bold leading-tight sm:text-lg">{name}</h3>
         <p className="mt-1 font-sans text-xs leading-snug sm:text-sm">{text}</p>
       </motion.div>
-      <motion.div className="absolute bottom-0 h-[6vh] w-px origin-bottom bg-[#4a2a0c]/80" style={{ scaleY: lineScale }} />
+      <motion.div
+        className={`absolute bottom-0 w-px origin-bottom ${era === 'today' ? 'bg-cyan-200/80' : 'bg-[#4a2a0c]/80'}`}
+        style={{ scaleY: lineScale, height: `${line}vh` }}
+      />
     </motion.div>
   )
 }

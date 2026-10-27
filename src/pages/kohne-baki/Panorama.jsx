@@ -1,12 +1,14 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { motion, useTransform } from 'framer-motion'
-import { BUILDINGS, ERAS, HILLS, HOLD, NOTES, holdRange } from './timeline.js'
+import { BUILDINGS, ERAS, FINALE, HILLS, HOLD, NOTES, holdRange } from './timeline.js'
 import { HORIZON } from './Sky.jsx'
 import Callout from './Callout.jsx'
 import { Camel, Caravanserai, GroundFire, MaidenTower, Minaret, ShirvanshahPalace, Walls } from './buildings/Medieval.jsx'
 import { BlackCity, Derricks, DerricksWest, FirstWell, Zoroaster } from './buildings/Oil.jsx'
 import { Boulevard, GirlsSchool, Ismailiyya, ParliamentFlag, TagiyevTheatre, University } from './buildings/Postcard.jsx'
 import { Funicular, GovernmentHouse, MetroSign, NeftDashlari, Pumpjacks } from './buildings/Soviet.jsx'
+import { CrystalHall, FlagSquare, FlameTowers, HeydarAliyevCenter, TvTower, WhiteCity } from './buildings/Today.jsx'
+import { rand } from '../shared/util.js'
 
 // Panorama units: viewBox 1440 × 300, drawn at its real aspect (never stretched)
 const W = 1440
@@ -43,9 +45,24 @@ const DRAWINGS = {
   pumpjacks: Pumpjacks,
   funicular: Funicular,
   metro: MetroSign,
+  'tv-tower': TvTower,
+  'flag-square': FlagSquare,
+  'crystal-hall': CrystalHall,
+  'white-city': WhiteCity,
+  'flame-towers': FlameTowers,
+  'heydar-aliyev-center': HeydarAliyevCenter,
 }
+/** Height of the near hill's top line at x (roughly: the lights stay on its face). */
+const groundAt = (x) => {
+  if (x < 380) return 190 + (x / 380) * 10
+  if (x < 520) return 200 + ((x - 380) / 140) * 32
+  if (x < 980) return GROUND
+  if (x < 1170) return 232 - ((x - 980) / 190) * 44
+  return 188
+}
+
 // Buildings on the far hill (drawn behind the near one); a `base` in the data overrides GROUND
-const FAR_HILL = { yanardag: 72, university: 88 }
+const FAR_HILL = { yanardag: 72, university: 88, 'tv-tower': 104, 'flame-towers': 157, 'heydar-aliyev-center': 92 }
 const baseOf = (b) => b.base ?? FAR_HILL[b.key] ?? GROUND
 // Drawings that grow in parts themselves (one derrick, one tree at a time)
 const PARTS = new Set(['derricks', 'derricks-west', 'boulevard'])
@@ -58,6 +75,7 @@ const FADE = 0.008
 const PAN = [
   ...ERAS.map((e) => [e.title, 0.5]),
   ...NOTES.flatMap((b) => holdRange(b.at).map((t) => [t, b.x / W])),
+  [FINALE, 0.5],
 ].sort((a, b) => a[0] - b[0])
 
 /**
@@ -114,6 +132,17 @@ export default function Panorama({ time }) {
   const near = useTransform(time, HILLS.points, HILLS.near)
   const frame = usePanorama(time)
 
+  // Electric light: house windows on the hills come on through the Soviet evening into today's night
+  const lightsOpacity = useTransform(time, [0.66, 0.8, 1], [0, 0.6, 1])
+  const lights = useMemo(
+    () =>
+      Array.from({ length: 140 }, () => {
+        const x = rand(10, 1430)
+        return { x, y: rand(groundAt(x) + 6, 292), r: rand(0.7, 1.4) }
+      }),
+    []
+  )
+
   // The caravan walks the shore in the Middle Ages and is gone by the oil boom
   const caravanOpacity = useTransform(time, [0.04, 0.08, 0.22, 0.26], [0, 1, 1, 0])
 
@@ -136,6 +165,11 @@ export default function Panorama({ time }) {
         ))}
         {/* The walls stand in front of the town */}
         <Building building={BUILDINGS.find((b) => b.key === 'walls')} time={time} />
+        <motion.g style={{ opacity: lightsOpacity }}>
+          {lights.map((l, i) => (
+            <circle key={i} cx={l.x} cy={l.y} r={l.r} fill="#fcd34d" />
+          ))}
+        </motion.g>
       </svg>
 
       {/* The caravan: four camels walking the shore below the walls, across the whole view */}

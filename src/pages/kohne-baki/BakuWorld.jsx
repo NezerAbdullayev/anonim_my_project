@@ -46,7 +46,7 @@ export default function BakuWorld() {
               Köhnə Bakı
             </h1>
             <p className="mt-2 font-old text-xl text-amber-100 drop-shadow-[0_2px_10px_rgba(20,10,40,0.9)] sm:text-2xl">
-              900 il, bir mənzərə
+              1000 il, bir mənzərə
             </p>
             <p className="mt-4 text-base text-white/90 drop-shadow-[0_1px_8px_rgba(20,10,40,0.9)] sm:text-lg">
               Zamanı irəli çəkmək üçün aşağı sürüşdürün

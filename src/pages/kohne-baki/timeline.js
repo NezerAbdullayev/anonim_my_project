@@ -1,9 +1,10 @@
-// 900 years of Baku seen from one spot on the Caspian shore. The camera never moves: scroll
-// moves time. `at` = [start, end] of an era on the timeline (0 = intro, 1 = today); every era
-// gets about the same share of scroll and the year runs linearly inside its own `years`.
+// A thousand years of Baku seen from one spot on the Caspian shore. The camera never moves:
+// scroll moves time. `at` = [start, end] of an era on the timeline (0 = intro, 1 = today); every
+// era gets about the same share of scroll and the year runs linearly inside its own `years`.
 // The whole timeline is also one day: dawn in the Middle Ages, night today (see SKY).
+// BUILDINGS go up on the hills at their real year, each with a note pointing at it.
 
-export const FIRST_YEAR = 1078 // Sınıqqala minaret, the oldest dated building in İçərişəhər
+export const FIRST_YEAR = 1000 // a little before the oldest dated building (Sınıqqala minaret, 1078)
 export const LAST_YEAR = 2026
 
 export const ERAS = [
@@ -70,11 +71,83 @@ export const ERAS = [
 export const TITLE = 0.04
 export const TITLE_SHORT = 0.025
 
-// The year at every era boundary: intro at the first year, today held to the end
+const titleSpan = (era) => (era.short ? TITLE_SHORT : TITLE)
+
+// While an era's title is up the year waits at the era's first year, then runs through the era
+const timeAt = (era, year) =>
+  era.at[0] + titleSpan(era) + ((year - era.years[0]) / (era.years[1] - era.years[0])) * (era.at[1] - era.at[0] - titleSpan(era))
+
+// The year along the timeline: intro at the first year, today held to the end
 export const YEAR = {
-  points: [0, ...ERAS.map((e) => e.at[0]), ERAS.at(-1).at[1], 1],
-  years: [FIRST_YEAR, ...ERAS.map((e) => e.years[0]), LAST_YEAR, LAST_YEAR],
+  points: [0, ...ERAS.flatMap((e) => [e.at[0], e.at[0] + titleSpan(e)]), ERAS.at(-1).at[1], 1],
+  years: [FIRST_YEAR, ...ERAS.flatMap((e) => [e.years[0], e.years[0]]), LAST_YEAR, LAST_YEAR],
 }
+
+// The buildings, era by era. `year` = when it goes up (its note shows then), `when` = how the
+// note dates it, `x` = where it stands in the panorama (0–1440, see Panorama.jsx), `top` = the
+// height of its top there (the note's line points at it).
+export const BUILDINGS = [
+  {
+    key: 'minaret',
+    era: 'medieval',
+    year: 1078,
+    when: '1078',
+    name: 'Sınıqqala minarəsi',
+    text: 'İçərişəhərin tarixi yazılmış ən qədim tikilisi. Məscidin girişindəki yazı onun ilini göstərir.',
+    x: 690,
+    top: 150,
+  },
+  {
+    key: 'walls',
+    era: 'medieval',
+    year: 1130,
+    when: '12-ci əsr',
+    name: 'Qala divarları',
+    text: 'Şəhər qoşa divarla əhatə olunur. Divarların içi bu gün də İçərişəhər adlanır.',
+    x: 560,
+    top: 214,
+  },
+  {
+    key: 'maiden-tower',
+    era: 'medieval',
+    year: 1200,
+    when: '12-ci əsr',
+    name: 'Qız qalası',
+    text: '~30 m hündürlüyündə daş qala. Nə vaxt və nə üçün tikildiyi hələ də mübahisəlidir.',
+    x: 860,
+    top: 138,
+  },
+  {
+    key: 'yanardag',
+    era: 'medieval',
+    year: 1290,
+    when: '13-cü əsr',
+    name: '"Odlar yurdu"',
+    text: 'Marko Polo bu torpaqda yerdən çıxan və yanan "yağ" haqqında yazır. Abşeronda yer alovları əsrlərlə sönmür.',
+    x: 1290,
+    top: 52,
+  },
+  {
+    key: 'shirvanshah',
+    era: 'medieval',
+    year: 1435,
+    when: '15-ci əsr',
+    name: 'Şirvanşahlar sarayı',
+    text: 'Şirvan hökmdarlarının sarayı: türbə, məscid, divanxana. Türbənin üzərindəki yazı 1435-ci ili göstərir.',
+    x: 600,
+    top: 166,
+  },
+  {
+    key: 'caravanserai',
+    era: 'medieval',
+    year: 1480,
+    when: '15-ci əsr',
+    name: 'Karvansaralar',
+    text: 'İpək yolunun tacirləri burada dincəlir: Multani və Buxara karvansaraları bu gün də durur.',
+    x: 770,
+    top: 202,
+  },
+]
 
 // One day across 900 years. Colours at timeline points (era middles):
 // pre-dawn → dawn (miniature) → hazy noon (sepia) → golden afternoon (postcard) → sunset
@@ -102,20 +175,34 @@ export const GRAIN = {
   opacity: [0.25, 0.25, 0.45, 0.25, 0.15, 0, 0],
 }
 
-// Every stop (for now: the era titles) is a point on the timeline; around it time slows to a
-// crawl for HOLD so the text can be read
+// Every stop (an era title or a building's note) is a point on the timeline; around it time
+// slows to a crawl for HOLD so the text can be read
 export const HOLD = 0.006
+// The longest a note is on screen either side of its point (timeline progress)
+const MAX_SPAN = 0.012
 
-for (const era of ERAS) era.title = era.at[0] + (era.short ? TITLE_SHORT : TITLE) / 2
+for (const era of ERAS) era.title = era.at[0] + titleSpan(era) / 2
 
-const STOPS = ERAS.map((e) => e.title)
+// Place every building at its real year. Its note may stay on screen until halfway to the
+// neighbouring notes, but not over its era's title (before it) or the next era's (after it).
+for (const era of ERAS) {
+  const list = BUILDINGS.filter((b) => b.era === era.key)
+  list.forEach((b) => (b.at = timeAt(era, b.year)))
+  list.forEach((b, i) => {
+    const before = i ? (b.at - list[i - 1].at) / 2 : b.at - (era.at[0] + titleSpan(era))
+    const after = i < list.length - 1 ? (list[i + 1].at - b.at) / 2 : era.at[1] - b.at
+    b.span = Math.min(MAX_SPAN, before, after)
+  })
+}
+
+const STOPS = [...ERAS.map((e) => e.title), ...BUILDINGS.map((b) => b.at)].sort((a, b) => a - b)
 
 /** [start, end] of a stop's hold on the timeline. */
 export const holdRange = (at) => [at - HOLD / 2, at + HOLD / 2]
 
 // Scroll track. Between stops the whole timeline would be BASE_VH long; each hold is
 // instead HOLD_VH of scroll (≈ 2,5 s at a calm scrolling pace, ~50vh/s)
-const BASE_VH = 2400
+const BASE_VH = 3200
 const HOLD_VH = 120
 
 const buildTrack = () => {

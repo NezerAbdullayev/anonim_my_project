@@ -25,7 +25,7 @@ function Flap({ digit }) {
 export default function YearCounter({ time }) {
   const yearValue = useTransform(time, YEAR.points, YEAR.years)
   const [year, setYear] = useState(YEAR.years[0])
-  useMotionValueEvent(yearValue, 'change', (y) => setYear(Math.round(y)))
+  useMotionValueEvent(yearValue, 'change', (y) => setYear(Math.floor(y)))
   const era = eraAt(year)
 
   return (

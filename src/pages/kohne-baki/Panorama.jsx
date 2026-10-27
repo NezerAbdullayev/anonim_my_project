@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import { motion, useTransform } from 'framer-motion'
-import { BUILDINGS, ERAS, HILLS, HOLD, NOTES } from './timeline.js'
+import { BUILDINGS, ERAS, HILLS, HOLD, NOTES, holdRange } from './timeline.js'
 import { HORIZON } from './Sky.jsx'
 import Callout from './Callout.jsx'
 import { Camel, Caravanserai, GroundFire, MaidenTower, Minaret, ShirvanshahPalace, Walls } from './buildings/Medieval.jsx'
 import { BlackCity, Derricks, DerricksWest, FirstWell, Zoroaster } from './buildings/Oil.jsx'
+import { Boulevard, GirlsSchool, Ismailiyya, ParliamentFlag, TagiyevTheatre, University } from './buildings/Postcard.jsx'
 
 // Panorama units: viewBox 1440 × 300, drawn at its real aspect (never stretched)
 const W = 1440
@@ -30,16 +31,28 @@ const DRAWINGS = {
   'derricks-west': DerricksWest,
   'black-city': BlackCity,
   zoroaster: Zoroaster,
+  theatre: TagiyevTheatre,
+  'girls-school': GirlsSchool,
+  boulevard: Boulevard,
+  ismailiyya: Ismailiyya,
+  parliament: ParliamentFlag,
+  university: University,
 }
 // Buildings on the far hill (drawn behind the near one); a `base` in the data overrides GROUND
-const FAR_HILL = { yanardag: 72 }
+const FAR_HILL = { yanardag: 72, university: 88 }
 const baseOf = (b) => b.base ?? FAR_HILL[b.key] ?? GROUND
+// Drawings that grow in parts themselves (one derrick, one tree at a time)
+const PARTS = new Set(['derricks', 'derricks-west', 'boulevard'])
 // How long a building takes to go up at the least (timeline progress), and to fade when removed
 const MIN_GROW = 0.008
 const FADE = 0.008
 
-// The camera looks at the middle during era titles and at each building while its note is up
-const PAN = [...ERAS.map((e) => [e.title, 0.5]), ...NOTES.map((b) => [b.at, b.x / W])].sort((a, b) => a[0] - b[0])
+// The camera looks at the middle during era titles and stays on each building while its note
+// is up (the whole hold), moving on between them
+const PAN = [
+  ...ERAS.map((e) => [e.title, 0.5]),
+  ...NOTES.flatMap((b) => holdRange(b.at).map((t) => [t, b.x / W])),
+].sort((a, b) => a[0] - b[0])
 
 /**
  * One building: it grows up out of the ground in the moments before its note appears and,
@@ -55,7 +68,7 @@ function Building({ building, time }) {
   // goneAt - FADE → goneAt: and fades out when it is gone
   const left = useTransform(time, [gone - FADE, gone], [1, 0])
   const opacity = useTransform(() => grow.get() * left.get())
-  const parts = building.key.startsWith('derricks')
+  const parts = PARTS.has(building.key)
   return (
     <g transform={`translate(${building.x} ${baseOf(building)})`}>
       <motion.g style={{ scaleY: parts ? 1 : grow, opacity, originY: 1, transformBox: 'fill-box' }}>

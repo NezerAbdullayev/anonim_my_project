@@ -15,15 +15,15 @@ export default function EraTitle({ era, progress }) {
 
   return (
     <motion.section
-      className="pointer-events-none absolute inset-x-0 top-[24vh] z-[600] flex flex-col items-center px-4 text-center sm:top-[26vh]"
+      className="pointer-events-none absolute inset-x-0 top-[24vh] z-[600] flex flex-col items-center px-4 text-center sm:top-[26vh] short:top-[32vh]"
       style={{ x, opacity }}
       aria-label={era.name}
     >
       <p className="font-mono text-xs tracking-[0.3em] text-white/80 drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)] sm:text-sm">
-        {era.years[0]} – {era.years[1]}
+        {Math.floor(era.years[0])} – {Math.floor(era.years[1])}
       </p>
-      <h2 className={`mt-1 font-black ${era.short ? 'text-3xl sm:text-4xl' : 'text-4xl sm:text-6xl'} ${era.titleClass}`}>{era.name}</h2>
-      <p className="mt-3 max-w-lg rounded-xl bg-black/25 px-4 py-2 text-sm leading-relaxed text-white backdrop-blur-sm sm:text-base">
+      <h2 className={`mt-1 font-black ${era.short ? 'text-3xl sm:text-4xl' : 'text-4xl sm:text-6xl'} short:text-2xl ${era.titleClass}`}>{era.name}</h2>
+      <p className="mt-3 max-w-lg rounded-xl bg-black/25 px-4 py-2 text-sm leading-relaxed text-white backdrop-blur-sm sm:text-base short:mt-1 short:py-1 short:text-xs">
         {era.text}
       </p>
     </motion.section>

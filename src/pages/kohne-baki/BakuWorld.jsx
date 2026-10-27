@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { animate, motion, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
+import { animate, motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
+import { LAYERS, playBakuMusic } from '../../audio/bakuMusic.js'
 import Sky from './Sky.jsx'
 import Panorama, { Notes } from './Panorama.jsx'
 import Sea from './Sea.jsx'
@@ -8,7 +9,15 @@ import EraTitle from './EraTitle.jsx'
 import YearCounter from './YearCounter.jsx'
 import Memorials from './Memorial.jsx'
 import Finale from './Finale.jsx'
-import { ERAS, TRACK } from './timeline.js'
+import { ERAS, MUSIC, TRACK, hushAt } from './timeline.js'
+
+// Piecewise-linear value of `values` at `t` along `points`
+const interpolate = (points, values, t) => {
+  if (t <= points[0]) return values[0]
+  for (let i = 1; i < points.length; i++)
+    if (t <= points[i]) return values[i - 1] + ((t - points[i - 1]) / (points[i] - points[i - 1])) * (values[i] - values[i - 1])
+  return values.at(-1)
+}
 
 /**
  * Scroll-driven time-lapse of Baku: one fixed view of the bay from the Caspian, from 1078 to
@@ -22,6 +31,27 @@ export default function BakuWorld() {
   const timeProgress = useTransform(scrollYProgress, TRACK.scroll, TRACK.time)
   // Spring on top of it: smooth, like the hands of a clock catching up
   const time = useSpring(timeProgress, { stiffness: 60, damping: 22, restDelta: 0.0002 })
+
+  // Background music for as long as this world is open; its layers follow the eras
+  const musicRef = useRef(null)
+  useEffect(() => {
+    const music = playBakuMusic()
+    musicRef.current = music
+    return () => {
+      music.stop()
+      musicRef.current = null
+    }
+  }, [])
+  const mixAt = (t) => {
+    const mix = {}
+    for (const name of LAYERS) mix[name] = interpolate(MUSIC.points, MUSIC[name], t)
+    return mix
+  }
+  useMotionValueEvent(time, 'change', (t) => {
+    musicRef.current?.setMix(mixAt(t))
+    musicRef.current?.setHush(hushAt(t))
+  })
+  useEffect(() => musicRef.current?.setMix(mixAt(time.get())), [])
 
   // "Wind time back": the scroll runs back to the top by itself, so the whole thousand years
   // play in reverse and the city un-builds itself. Any wheel or touch hands control back.

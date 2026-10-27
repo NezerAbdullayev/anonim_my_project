@@ -29,11 +29,11 @@ export default function YearCounter({ time }) {
   const era = eraAt(year)
 
   return (
-    <div className="pointer-events-none absolute inset-x-0 top-4 z-[700] flex flex-col items-center sm:top-6" aria-live="off">
-      <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-[#f3e2c0]/80 drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)] sm:text-xs">
+    <div className="pointer-events-none absolute inset-x-0 top-4 z-[700] flex flex-col items-center sm:top-6 short:top-2" aria-live="off">
+      <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-[#f3e2c0]/80 drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)] sm:text-xs short:hidden">
         İl
       </p>
-      <div className="mt-1 flex gap-1 font-mono text-3xl font-bold text-[#f3e2c0] sm:text-5xl" aria-label={`İl ${year}`}>
+      <div className="mt-1 flex gap-1 font-mono text-3xl font-bold text-[#f3e2c0] sm:text-5xl short:mt-0 short:text-xl" aria-label={`İl ${year}`}>
         {String(year)
           .padStart(4, '0')
           .split('')
@@ -41,10 +41,10 @@ export default function YearCounter({ time }) {
             <Flap key={i} digit={d} />
           ))}
       </div>
-      <p className="mt-2 font-old text-sm text-[#f3e2c0] drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)] sm:text-base">
+      <p className="mt-2 font-old text-sm text-[#f3e2c0] drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)] sm:text-base short:hidden">
         {ERAS[era].name}
       </p>
-      <ol className="mt-2 flex gap-2" aria-hidden="true">
+      <ol className="mt-2 flex gap-2 short:mt-1" aria-hidden="true">
         {ERAS.map((e, i) => (
           <li
             key={e.key}

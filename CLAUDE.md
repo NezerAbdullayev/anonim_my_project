@@ -36,7 +36,9 @@ Könüllü (opt-in), açıq şəkildə zarafat olan "haker terminalı" veb tətb
 6. **Dünyalar** (`/v1/*`): kosmos → okean → kohne-baki → toy → aurora → pisikler → telefon; hər birində
    "Başqa səhifəni kəşf et" növbətinə keçirir. Kosmos (Günəş sistemi) və okean (Mariana çökəkliyinə
    dalış) scroll səyahətləridir: faktlar, real fotolar, öz musiqiləri, sonda başa qayıdan düymə.
-   Datası `kosmos/journey.js` və `okean/dive.js`-dədir.
+   Köhnə Bakı fotosuz time-lapse-dır: kamera yerindən tərpənmir, scroll zamanı (1000 → bugün)
+   irəli çəkir, hər dövrün öz SVG rəsm üslubu və musiqi qatı var. Datası `kosmos/journey.js`,
+   `okean/dive.js` və `kohne-baki/timeline.js`-dədir.
 
 ## Animasiya Qaydaları (scroll-driven)
 Mənbə: `claude_animation_rules_setup.md`. Bu layihədə JS (TS yox) və Vite (Next.js yox) qalır.

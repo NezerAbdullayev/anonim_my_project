@@ -508,6 +508,32 @@ for (const era of ERAS) {
 
 export const NOTES = BUILDINGS.filter((b) => !b.silent)
 
+// The music's layers through the timeline (see audio/bakuMusic.js): the tar of the Middle
+// Ages, pumps and gramophone in the oil boom, a waltz for the millionaires, brass for the Soviet
+// years and a soft synth tonight. The sea and the drone stay underneath all along.
+export const MUSIC = {
+  points: [0, 0.04, 0.2, 0.25, 0.28, 0.42, 0.45, 0.55, 0.65, 0.68, 0.82, 0.85, 1],
+  sea: [1, 1, 1, 1, 0.7, 0.6, 0.6, 0.6, 0.6, 0.5, 0.4, 0.5, 0.6],
+  drone: [1, 1, 1, 1, 0.8, 0.6, 0.4, 0.4, 0.6, 0.8, 0.8, 0.5, 0.5],
+  tar: [0.5, 1, 1, 0.8, 0.3, 0.15, 0.1, 0.1, 0.15, 0.05, 0.05, 0.15, 0.3],
+  machine: [0, 0, 0, 0, 0.8, 0.8, 0.3, 0.15, 0, 0, 0, 0, 0],
+  crackle: [0, 0, 0, 0, 0.6, 0.8, 0.8, 0.8, 0.6, 0.3, 0, 0, 0],
+  waltz: [0, 0, 0, 0, 0, 0, 0.9, 0.9, 0.6, 0, 0, 0, 0],
+  brass: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0.9, 0.9, 0, 0],
+  synth: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.9, 0.9],
+}
+
+/** How much the moments of remembrance dim the music at a point of the timeline (0..1). */
+export const hushAt = (t) => {
+  let h = 0
+  for (const m of MEMORIALS) {
+    const [h0, h1] = holdRange(m.at)
+    if (t > m.at - m.span && t < m.at + m.span)
+      h = Math.max(h, t < h0 ? (t - (m.at - m.span)) / (h0 - (m.at - m.span)) : t > h1 ? (m.at + m.span - t) / (m.at + m.span - h1) : 1)
+  }
+  return h
+}
+
 // The final card, after today's era: time stands still there for one more hold
 export const FINALE = 0.98
 

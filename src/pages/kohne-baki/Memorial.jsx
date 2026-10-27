@@ -17,7 +17,7 @@ function Moment({ memorial, time }) {
       <motion.div className="pointer-events-none absolute inset-0 z-[560] bg-[#808080] mix-blend-saturation" style={{ opacity: shade }} />
       <motion.div className="pointer-events-none absolute inset-0 z-[560] bg-black" style={{ opacity: dim }} />
       <motion.section
-        className="pointer-events-none absolute inset-x-4 top-[30vh] z-[640] mx-auto max-w-lg text-center"
+        className="pointer-events-none absolute inset-x-4 top-[30vh] z-[640] mx-auto max-w-lg text-center short:top-[24vh]"
         style={{ opacity: shade }}
         aria-label={when}
       >

@@ -19,7 +19,7 @@ export const ERAS = [
   {
     key: 'centuries',
     name: 'Əsrlər keçir',
-    years: [1500, 1846],
+    years: [1500, 1840],
     at: [0.2, 0.25],
     text: 'Şəhər yüz illərlə qala divarları içində yaşayır. Torpağın altında isə "qara qızıl" gözləyir…',
     titleClass: 'font-old text-amber-100 drop-shadow-[0_2px_10px_rgba(60,30,0,0.8)]',
@@ -28,8 +28,8 @@ export const ERAS = [
   {
     key: 'oil',
     name: 'Neft bumu',
-    years: [1846, 1880],
-    at: [0.25, 0.4],
+    years: [1840, 1880],
+    at: [0.25, 0.43],
     text: 'Dünyada ilk qazılmış neft quyusu. Taxta buruqlar meşə kimi çoxalır, şəhər neftlə zənginləşir.',
     titleClass: 'font-old text-[#f3e2c0] drop-shadow-[0_2px_10px_rgba(40,25,10,0.9)]',
   },
@@ -37,7 +37,7 @@ export const ERAS = [
     key: 'millionaires',
     name: 'Milyonçuların Bakısı',
     years: [1880, 1918],
-    at: [0.4, 0.55],
+    at: [0.43, 0.56],
     text: 'Neft milyonçuları saraylar, teatrlar və məktəblər tikdirir. Dənizin sahilində bulvar salınır.',
     titleClass: 'font-old text-[#fff3dc] drop-shadow-[0_2px_10px_rgba(60,35,10,0.8)]',
   },
@@ -45,7 +45,7 @@ export const ERAS = [
     key: 'republic',
     name: 'Cümhuriyyət',
     years: [1918, 1920],
-    at: [0.55, 0.63],
+    at: [0.56, 0.64],
     text: 'Azərbaycan Xalq Cümhuriyyəti: Şərqdə ilk parlamentli respublika. Bakı onun paytaxtı olur.',
     titleClass: 'font-old text-white drop-shadow-[0_2px_12px_rgba(80,20,30,0.9)]',
   },
@@ -53,7 +53,7 @@ export const ERAS = [
     key: 'soviet',
     name: 'Sovet Bakısı',
     years: [1920, 1991],
-    at: [0.63, 0.8],
+    at: [0.64, 0.8],
     text: 'Geniş meydanlar, ağır daş binalar, dənizin ortasında neft şəhəri.',
     titleClass: 'font-display uppercase tracking-wider text-[#f4e9d8] drop-shadow-[0_3px_0_rgba(140,30,30,0.9)]',
   },
@@ -66,6 +66,12 @@ export const ERAS = [
     titleClass: 'font-display text-cyan-100 drop-shadow-[0_0_18px_rgba(103,232,249,0.8)]',
   },
 ]
+
+/** Index of the era at a year. */
+export const eraAt = (year) => {
+  const i = ERAS.findIndex((e) => year < e.years[1])
+  return i === -1 ? ERAS.length - 1 : i
+}
 
 // Each era opens with its title banner for TITLE of the timeline (TITLE_SHORT for a fast-forward)
 export const TITLE = 0.04
@@ -147,12 +153,68 @@ export const BUILDINGS = [
     x: 770,
     top: 202,
   },
+  {
+    key: 'first-well',
+    era: 'oil',
+    year: 1846,
+    when: '1846',
+    name: 'İlk qazılmış quyu',
+    text: 'Bibiheybətdə 21 m-lik quyu qazılır: əllə yox, qazma ilə açılan ilk neft quyusu sayılır. Amerikada ilk quyu 1859-da qazıldı.',
+    x: 300,
+    base: 194,
+    top: 150,
+  },
+  {
+    key: 'black-city',
+    era: 'oil',
+    year: 1872,
+    when: '1872',
+    name: 'Qara şəhər',
+    text: 'Neft zavodları şəhərdən kənara köçürülür. 1874-cü ilə burada 120-dən çox zavod var, hisdən hər şey qaralır.',
+    x: 1040,
+    base: 226,
+    top: 168,
+    removed: 2011,
+  },
+  {
+    key: 'derricks',
+    era: 'oil',
+    year: 1875,
+    when: '1870-ci illər',
+    name: 'Buruq meşəsi',
+    text: 'Neft torpaqları hərraca çıxır (1872) və Balaxanıda buruqlar meşə kimi çoxalır. Fontan vuran quyular günlərlə neft püskürür.',
+    x: 1200,
+    base: 186,
+    top: 128,
+    removed: 1950,
+  },
+  {
+    key: 'derricks-west',
+    era: 'oil',
+    year: 1875,
+    silent: true, // goes up with the Balaxanı derricks, no note of its own
+    x: 260,
+    base: 196,
+    removed: 1950,
+  },
+  {
+    key: 'zoroaster',
+    era: 'oil',
+    year: 1878,
+    when: '1878',
+    name: '"Zoroastr" tankeri',
+    text: 'Nobel qardaşlarının sifarişi ilə tikilən dünyanın ilk neft tankeri. Nefti çəlləklərdə yox, birbaşa gəminin içində daşıyır.',
+    x: 880,
+    base: 340,
+    top: 300,
+    removed: 1905,
+  },
 ]
 
 // One day across 900 years. Colours at timeline points (era middles):
 // pre-dawn → dawn (miniature) → hazy noon (sepia) → golden afternoon (postcard) → sunset
 // → red dusk (Soviet poster) → night (neon)
-const DAY = [0, 0.12, 0.32, 0.47, 0.59, 0.72, 0.88, 1]
+const DAY = [0, 0.12, 0.34, 0.495, 0.6, 0.72, 0.88, 1]
 export const SKY = {
   points: DAY,
   top: ['#1f1d47', '#3b6fb6', '#a89a7c', '#7fa7c9', '#5b4b8a', '#2b2d42', '#050816', '#050816'],
@@ -169,9 +231,14 @@ export const HILLS = {
   far: ['#3a3256', '#d9b27a', '#9c8a68', '#c9a678', '#7a4a5a', '#5a3434', '#0d1428', '#0d1428'],
   near: ['#2a2540', '#c48e4e', '#7a6a4f', '#b08a5a', '#5a3b4a', '#3a2c2c', '#080d1c', '#080d1c'],
 }
+// Sepia over the picture: none in the miniature, strong in the engraving, half in the postcard
+export const TINT = {
+  points: [0, 0.2, 0.27, 0.42, 0.5, 0.6, 0.66, 1],
+  opacity: [0, 0, 0.8, 0.8, 0.35, 0.25, 0, 0],
+}
 // Paper grain over the picture: thick in the old "drawings", none in today's night
 export const GRAIN = {
-  points: [0, 0.12, 0.32, 0.47, 0.63, 0.8, 1],
+  points: [0, 0.12, 0.34, 0.495, 0.64, 0.8, 1],
   opacity: [0.25, 0.25, 0.45, 0.25, 0.15, 0, 0],
 }
 
@@ -185,8 +252,12 @@ for (const era of ERAS) era.title = era.at[0] + titleSpan(era) / 2
 
 // Place every building at its real year. Its note may stay on screen until halfway to the
 // neighbouring notes, but not over its era's title (before it) or the next era's (after it).
+// A `silent` building goes up with the note before it; a `removed` one fades away in that year.
+const eraOf = (year) => ERAS[eraAt(year)]
+for (const b of BUILDINGS) if (b.removed) b.goneAt = timeAt(eraOf(b.removed), b.removed)
 for (const era of ERAS) {
-  const list = BUILDINGS.filter((b) => b.era === era.key)
+  const list = BUILDINGS.filter((b) => b.era === era.key && !b.silent)
+  BUILDINGS.filter((b) => b.era === era.key && b.silent).forEach((b) => (b.at = timeAt(era, b.year)))
   list.forEach((b) => (b.at = timeAt(era, b.year)))
   list.forEach((b, i) => {
     const before = i ? (b.at - list[i - 1].at) / 2 : b.at - (era.at[0] + titleSpan(era))
@@ -195,7 +266,9 @@ for (const era of ERAS) {
   })
 }
 
-const STOPS = [...ERAS.map((e) => e.title), ...BUILDINGS.map((b) => b.at)].sort((a, b) => a - b)
+export const NOTES = BUILDINGS.filter((b) => !b.silent)
+
+const STOPS = [...ERAS.map((e) => e.title), ...NOTES.map((b) => b.at)].sort((a, b) => a - b)
 
 /** [start, end] of a stop's hold on the timeline. */
 export const holdRange = (at) => [at - HOLD / 2, at + HOLD / 2]
@@ -228,9 +301,3 @@ const buildTrack = () => {
 
 /** Scroll progress (0..1) → timeline progress (0..1), and the track height in vh. */
 export const TRACK = buildTrack()
-
-/** Index of the era at a year. */
-export const eraAt = (year) => {
-  const i = ERAS.findIndex((e) => year < e.years[1])
-  return i === -1 ? ERAS.length - 1 : i
-}

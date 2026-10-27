@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion'
 import Sky from './Sky.jsx'
-import Panorama from './Panorama.jsx'
+import Panorama, { Notes } from './Panorama.jsx'
 import Sea from './Sea.jsx'
 import EraStyle from './EraStyle.jsx'
 import EraTitle from './EraTitle.jsx'
@@ -30,9 +30,11 @@ export default function BakuWorld() {
       <div className="relative" style={{ height: `${TRACK.vh}vh` }}>
         <div className="sticky top-0 h-screen overflow-hidden">
           <Sky time={time} />
-          <Panorama time={time} />
+          {/* the sea first: ships in the panorama sail on it */}
           <Sea time={time} />
+          <Panorama time={time} />
           <EraStyle time={time} />
+          <Notes time={time} />
           {ERAS.map((era) => (
             <EraTitle key={era.key} era={era} progress={time} />
           ))}

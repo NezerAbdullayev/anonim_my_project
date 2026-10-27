@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import { motion, useTransform } from 'framer-motion'
-import { BUILDINGS, ERAS, HILLS, HOLD } from './timeline.js'
+import { BUILDINGS, ERAS, HILLS, HOLD, NOTES } from './timeline.js'
 import { HORIZON } from './Sky.jsx'
 import Callout from './Callout.jsx'
 import { Camel, Caravanserai, GroundFire, MaidenTower, Minaret, ShirvanshahPalace, Walls } from './buildings/Medieval.jsx'
+import { BlackCity, Derricks, DerricksWest, FirstWell, Zoroaster } from './buildings/Oil.jsx'
 
 // Panorama units: viewBox 1440 × 300, drawn at its real aspect (never stretched)
 const W = 1440
@@ -24,36 +25,52 @@ const DRAWINGS = {
   yanardag: GroundFire,
   shirvanshah: ShirvanshahPalace,
   caravanserai: Caravanserai,
+  'first-well': FirstWell,
+  derricks: Derricks,
+  'derricks-west': DerricksWest,
+  'black-city': BlackCity,
+  zoroaster: Zoroaster,
 }
-// Where a building's base stands, if not on the old town's terrace
-const BASE = { yanardag: 72 }
+// Buildings on the far hill (drawn behind the near one); a `base` in the data overrides GROUND
+const FAR_HILL = { yanardag: 72 }
+const baseOf = (b) => b.base ?? FAR_HILL[b.key] ?? GROUND
+// How long a building takes to go up at the least (timeline progress), and to fade when removed
+const MIN_GROW = 0.008
+const FADE = 0.008
 
 // The camera looks at the middle during era titles and at each building while its note is up
-const PAN = [...ERAS.map((e) => [e.title, 0.5]), ...BUILDINGS.map((b) => [b.at, b.x / W])].sort((a, b) => a[0] - b[0])
+const PAN = [...ERAS.map((e) => [e.title, 0.5]), ...NOTES.map((b) => [b.at, b.x / W])].sort((a, b) => a[0] - b[0])
 
-/** One building: it grows up out of the ground in the moments before its note appears. */
+/**
+ * One building: it grows up out of the ground in the moments before its note appears and,
+ * if it is `removed` later, fades away in that year. Drawings that grow in parts (the derrick
+ * forest) get the growth as `grow`.
+ */
 function Building({ building, time }) {
   const Drawing = DRAWINGS[building.key]
   const done = building.at - HOLD / 2
   // done - span → done: the building rises from the ground and fades in
-  const grow = useTransform(time, [done - building.span, done], [0, 1])
+  const grow = useTransform(time, [done - Math.max(building.span ?? 0, MIN_GROW), done], [0, 1])
+  const gone = building.goneAt ?? 2
+  // goneAt - FADE → goneAt: and fades out when it is gone
+  const left = useTransform(time, [gone - FADE, gone], [1, 0])
+  const opacity = useTransform(() => grow.get() * left.get())
+  const parts = building.key.startsWith('derricks')
   return (
-    <g transform={`translate(${building.x} ${BASE[building.key] ?? GROUND})`}>
-      <motion.g style={{ scaleY: grow, opacity: grow, originY: 1, transformBox: 'fill-box' }}>
-        <Drawing />
+    <g transform={`translate(${building.x} ${baseOf(building)})`}>
+      <motion.g style={{ scaleY: parts ? 1 : grow, opacity, originY: 1, transformBox: 'fill-box' }}>
+        <Drawing grow={grow} />
       </motion.g>
     </g>
   )
 }
 
 /**
- * The view itself, from the sea toward the city: hills, and era by era the buildings on them,
- * each with its note. Wider than a phone screen: there the camera pans to each new building.
+ * Size and camera of the panorama, shared by the drawing and the notes layer above the era's
+ * style: at its real aspect, at least the screen's width and 30vh tall. Where it is wider than
+ * the screen (phones) the camera pans to keep the building of the current note in the middle.
  */
-export default function Panorama({ time }) {
-  const far = useTransform(time, HILLS.points, HILLS.far)
-  const near = useTransform(time, HILLS.points, HILLS.near)
-
+function usePanorama(time) {
   const [screen, setScreen] = useState(() => ({ w: window.innerWidth, h: window.innerHeight }))
   useEffect(() => {
     const onResize = () => setScreen({ w: window.innerWidth, h: window.innerHeight })
@@ -68,21 +85,33 @@ export default function Panorama({ time }) {
   const focus = useTransform(time, PAN.map((p) => p[0]), PAN.map((p) => p[1]))
   const x = useTransform(focus, (f) => Math.max(-slack, Math.min(slack, (0.5 - f) * width)))
 
+  return { width, height: (width * H) / W, left: (screen.w - width) / 2, bottom: `${100 - HORIZON}vh`, x }
+}
+
+/** The view itself, from the sea toward the city: hills and, era by era, the buildings on them. */
+export default function Panorama({ time }) {
+  const far = useTransform(time, HILLS.points, HILLS.far)
+  const near = useTransform(time, HILLS.points, HILLS.near)
+  const frame = usePanorama(time)
+
   // The caravan walks the shore in the Middle Ages and is gone by the oil boom
   const caravanOpacity = useTransform(time, [0.04, 0.08, 0.22, 0.26], [0, 1, 1, 0])
 
   return (
-    <motion.div
-      className="absolute"
-      style={{ width, height: (width * H) / W, left: (screen.w - width) / 2, bottom: `${100 - HORIZON}vh`, x }}
-    >
+    <motion.div className="absolute" style={frame}>
       <svg viewBox={`0 0 ${W} ${H}`} className="absolute inset-0 h-full w-full overflow-visible" aria-hidden="true">
+        <defs>
+          {/* Engraving hatch for the sepia buildings */}
+          <pattern id="hatch" width="3" height="3" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <line x1="0" y1="0" x2="0" y2="3" stroke="#3e2a14" strokeWidth="0.6" opacity="0.55" />
+          </pattern>
+        </defs>
         <motion.path d={FAR} style={{ fill: far }} />
-        {BUILDINGS.filter((b) => BASE[b.key]).map((b) => (
+        {BUILDINGS.filter((b) => FAR_HILL[b.key]).map((b) => (
           <Building key={b.key} building={b} time={time} />
         ))}
         <motion.path d={NEAR} style={{ fill: near }} />
-        {BUILDINGS.filter((b) => !BASE[b.key] && b.key !== 'walls').map((b) => (
+        {BUILDINGS.filter((b) => !FAR_HILL[b.key] && b.key !== 'walls').map((b) => (
           <Building key={b.key} building={b} time={time} />
         ))}
         {/* The walls stand in front of the town */}
@@ -105,15 +134,17 @@ export default function Panorama({ time }) {
           ))}
         </motion.svg>
       </motion.div>
+    </motion.div>
+  )
+}
 
-      {BUILDINGS.map((b) => (
-        <Callout
-          key={b.key}
-          building={b}
-          time={time}
-          left={`${(b.x / W) * 100}%`}
-          top={`${(b.top / H) * 100}%`}
-        />
+/** The buildings' notes, over the panorama and above the era's style (so they stay crisp). */
+export function Notes({ time }) {
+  const frame = usePanorama(time)
+  return (
+    <motion.div className="pointer-events-none absolute z-[550]" style={frame}>
+      {NOTES.map((b) => (
+        <Callout key={b.key} building={b} time={time} left={`${(b.x / W) * 100}%`} top={`${(b.top / H) * 100}%`} />
       ))}
     </motion.div>
   )

@@ -33,7 +33,7 @@ Könüllü (opt-in), açıq şəkildə zarafat olan "haker terminalı" veb tətb
    çatlayıb parçalanır (`ShatterTransition`). Dünya deyil, yalnız `/`-da oynayır.
 5. **Final Reveal:** Böyük sabit mətn "Hərşey hazırdır, daxil ola bilərsiz" (təsadüfi variant yoxdur), hədəf adı,
    "Daxil ol" düyməsi (yükləmə zolağı, sonra `/v1`).
-6. **Dünyalar** (`/v1/*`): kosmos → okean → retro → toy → aurora → pisikler → telefon; hər birində
+6. **Dünyalar** (`/v1/*`): kosmos → okean → kohne-baki → toy → aurora → pisikler → telefon; hər birində
    "Başqa səhifəni kəşf et" növbətinə keçirir. Kosmos (Günəş sistemi) və okean (Mariana çökəkliyinə
    dalış) scroll səyahətləridir: faktlar, real fotolar, öz musiqiləri, sonda başa qayıdan düymə.
    Datası `kosmos/journey.js` və `okean/dive.js`-dədir.

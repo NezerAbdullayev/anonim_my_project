@@ -1,6 +1,6 @@
 import SpaceWorld from './kosmos/SpaceWorld.jsx'
 import OceanWorld from './okean/OceanWorld.jsx'
-import SynthWorld from './retro/SynthWorld.jsx'
+import BakuWorld from './kohne-baki/BakuWorld.jsx'
 import PartyWorld from './toy/PartyWorld.jsx'
 import AuroraWorld from './aurora/AuroraWorld.jsx'
 import CatWorld from './pisikler/CatWorld.jsx'
@@ -13,7 +13,7 @@ export const WORLDS_PATH = '/v1'
 export const WORLDS = [
   { slug: 'kosmos', Component: SpaceWorld },
   { slug: 'okean', Component: OceanWorld },
-  { slug: 'retro', Component: SynthWorld },
+  { slug: 'kohne-baki', Component: BakuWorld },
   { slug: 'toy', Component: PartyWorld },
   { slug: 'aurora', Component: AuroraWorld },
   { slug: 'pisikler', Component: CatWorld },

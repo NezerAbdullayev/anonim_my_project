@@ -50,7 +50,8 @@ party-trick formatı.
         ├── shared/            # AnimatedTitle, util
         ├── kosmos/            # Günəş sistemi səyahəti (bax §5)
         ├── okean/             # Okeanın dibinə dalış (bax §6)
-        ├── retro/  toy/  aurora/  pisikler/  telefon/
+        ├── kohne-baki/        # Köhnə Bakı: 900 illik time-lapse (fotosuz SVG)
+        ├── toy/  aurora/  pisikler/  telefon/
 ```
 
 ## 4. İstifadəçi Axını
@@ -61,7 +62,7 @@ party-trick formatı.
 3. **eye**: göz animasiyası (~12 s, öz musiqisi ilə). Sonda qaranlıq çatlayıb parçalanır.
 4. **reveal**: sabit mətn "Hərşey hazırdır, daxil ola bilərsiz", hədəf adı, "Daxil ol" düyməsi
    (yükləmə zolağı, sonra `/v1`).
-5. **/v1/<dünya>**: `worlds.js`-dəki sıra ilə: kosmos → okean → retro → toy → aurora → pisikler → telefon,
+5. **/v1/<dünya>**: `worlds.js`-dəki sıra ilə: kosmos → okean → kohne-baki → toy → aurora → pisikler → telefon,
    sonuncudan sonra yenidən kosmos. "Başqa səhifəni kəşf et" düyməsi növbəti dünyaya keçirir.
    Bütün bu səhifələr default tam ekrandır.
 
@@ -123,6 +124,6 @@ Tətbiq qəsdən **zərərsiz və açıq zarafat** kimi qurulub. Bu qaydalar mə
 - ✅ Dünyalardakı faktlar maarifləndiricidir, fotolar açıq lisenziyalıdır və müəllifi göstərilir.
 
 ## 9. Sonrakı İşlər (nice-to-have)
-- Qalan dünyaları (retro, toy, aurora, pisikler) kosmos və okean kimi scroll səyahətinə çevirmək.
+- Qalan dünyaları (toy, aurora, pisikler) kosmos və okean kimi scroll səyahətinə çevirmək.
 - Okean faktlarını mənbələrlə yoxlamaq (bəzi rəqəmlər təxminidir).
 - Temalar, rejimlər, lokallaşdırma.

@@ -6,6 +6,7 @@ import Sea from './Sea.jsx'
 import EraStyle from './EraStyle.jsx'
 import EraTitle from './EraTitle.jsx'
 import YearCounter from './YearCounter.jsx'
+import Memorials from './Memorial.jsx'
 import { ERAS, TRACK } from './timeline.js'
 
 /**
@@ -35,6 +36,7 @@ export default function BakuWorld() {
           <Panorama time={time} />
           <EraStyle time={time} />
           <Notes time={time} />
+          <Memorials time={time} />
           {ERAS.map((era) => (
             <EraTitle key={era.key} era={era} progress={time} />
           ))}

@@ -6,6 +6,7 @@ import Callout from './Callout.jsx'
 import { Camel, Caravanserai, GroundFire, MaidenTower, Minaret, ShirvanshahPalace, Walls } from './buildings/Medieval.jsx'
 import { BlackCity, Derricks, DerricksWest, FirstWell, Zoroaster } from './buildings/Oil.jsx'
 import { Boulevard, GirlsSchool, Ismailiyya, ParliamentFlag, TagiyevTheatre, University } from './buildings/Postcard.jsx'
+import { Funicular, GovernmentHouse, MetroSign, NeftDashlari, Pumpjacks } from './buildings/Soviet.jsx'
 
 // Panorama units: viewBox 1440 × 300, drawn at its real aspect (never stretched)
 const W = 1440
@@ -37,6 +38,11 @@ const DRAWINGS = {
   ismailiyya: Ismailiyya,
   parliament: ParliamentFlag,
   university: University,
+  'government-house': GovernmentHouse,
+  'neft-dashlari': NeftDashlari,
+  pumpjacks: Pumpjacks,
+  funicular: Funicular,
+  metro: MetroSign,
 }
 // Buildings on the far hill (drawn behind the near one); a `base` in the data overrides GROUND
 const FAR_HILL = { yanardag: 72, university: 88 }
@@ -62,8 +68,9 @@ const PAN = [
 function Building({ building, time }) {
   const Drawing = DRAWINGS[building.key]
   const done = building.at - HOLD / 2
-  // done - span → done: the building rises from the ground and fades in
-  const grow = useTransform(time, [done - Math.max(building.span ?? 0, MIN_GROW), done], [0, 1])
+  const start = done - Math.max(building.span ?? 0, MIN_GROW)
+  // start → done: the building rises from the ground and fades in (or on until `built`)
+  const grow = useTransform(time, [start, building.builtAt ?? done], [0, 1])
   const gone = building.goneAt ?? 2
   // goneAt - FADE → goneAt: and fades out when it is gone
   const left = useTransform(time, [gone - FADE, gone], [1, 0])

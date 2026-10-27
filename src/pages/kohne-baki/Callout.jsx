@@ -5,11 +5,13 @@ import { holdRange } from './timeline.js'
 const MINIATURE = 'border-2 border-double border-[#d4a72c] bg-[#f3e2c0]/95 text-[#4a2a0c] font-old'
 const ENGRAVING = 'border border-[#3e2a14] bg-[#e9dcc0]/95 text-[#2e1f0e] font-old'
 const POSTCARD = 'border border-[#8a6a3a] bg-[#fbf3e0]/95 text-[#3a2a1a] font-old outline outline-1 outline-offset-2 outline-dashed outline-[#8a6a3a]/60'
+const POSTER = 'border-l-8 border-[#c0392b] bg-[#f4e9d8]/95 text-[#1f1a17] font-sans'
 const LOOK = {
   medieval: MINIATURE,
   oil: ENGRAVING,
   millionaires: POSTCARD,
   republic: POSTCARD,
+  soviet: POSTER,
 }
 
 /**

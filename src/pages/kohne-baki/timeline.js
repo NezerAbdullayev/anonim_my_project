@@ -29,7 +29,7 @@ export const ERAS = [
     key: 'oil',
     name: 'Neft bumu',
     years: [1840, 1880],
-    at: [0.25, 0.43],
+    at: [0.25, 0.42],
     text: 'Dünyada ilk qazılmış neft quyusu. Taxta buruqlar meşə kimi çoxalır, şəhər neftlə zənginləşir.',
     titleClass: 'font-old text-[#f3e2c0] drop-shadow-[0_2px_10px_rgba(40,25,10,0.9)]',
   },
@@ -37,7 +37,7 @@ export const ERAS = [
     key: 'millionaires',
     name: 'Milyonçuların Bakısı',
     years: [1880, 1918],
-    at: [0.43, 0.56],
+    at: [0.42, 0.55],
     text: 'Neft milyonçuları saraylar, teatrlar və məktəblər tikdirir. Dənizin sahilində bulvar salınır.',
     titleClass: 'font-old text-[#fff3dc] drop-shadow-[0_2px_10px_rgba(60,35,10,0.8)]',
   },
@@ -45,23 +45,30 @@ export const ERAS = [
     key: 'republic',
     name: 'Cümhuriyyət',
     years: [1918, 1920],
-    at: [0.56, 0.64],
+    at: [0.55, 0.65],
     text: 'Azərbaycan Xalq Cümhuriyyəti: Şərqdə ilk parlamentli respublika. Bakı onun paytaxtı olur.',
     titleClass: 'font-old text-white drop-shadow-[0_2px_12px_rgba(80,20,30,0.9)]',
   },
   {
     key: 'soviet',
     name: 'Sovet Bakısı',
-    years: [1920, 1991],
-    at: [0.64, 0.8],
+    years: [1920, 1991.8],
+    at: [0.65, 0.82],
+    // the late 1980s get more scroll than their share, so 20 January 1990 has room
+    anchors: [
+      [1920, 0],
+      [1989, 0.75],
+      [1990.5, 0.9],
+      [1991.8, 1],
+    ],
     text: 'Geniş meydanlar, ağır daş binalar, dənizin ortasında neft şəhəri.',
     titleClass: 'font-display uppercase tracking-wider text-[#f4e9d8] drop-shadow-[0_3px_0_rgba(140,30,30,0.9)]',
   },
   {
     key: 'today',
     name: 'Bugünkü Bakı',
-    years: [1991, LAST_YEAR],
-    at: [0.8, 0.96],
+    years: [1991.8, LAST_YEAR],
+    at: [0.82, 0.96],
     text: 'Müstəqil Azərbaycanın paytaxtı. Gecələr təpənin üstündə Alov qüllələri yanır.',
     titleClass: 'font-display text-cyan-100 drop-shadow-[0_0_18px_rgba(103,232,249,0.8)]',
   },
@@ -79,15 +86,52 @@ export const TITLE_SHORT = 0.025
 
 const titleSpan = (era) => (era.short ? TITLE_SHORT : TITLE)
 
+// How an era's run is shared out between its years: [year, fraction of the run]. Evenly by
+// default; an era's `anchors` can give some years more scroll than others.
+const anchorsOf = (era) => era.anchors ?? [[era.years[0], 0], [era.years[1], 1]]
+const runOf = (era) => [era.at[0] + titleSpan(era), era.at[1]]
+
 // While an era's title is up the year waits at the era's first year, then runs through the era
-const timeAt = (era, year) =>
-  era.at[0] + titleSpan(era) + ((year - era.years[0]) / (era.years[1] - era.years[0])) * (era.at[1] - era.at[0] - titleSpan(era))
+const timeAt = (era, year) => {
+  const a = anchorsOf(era)
+  const [r0, r1] = runOf(era)
+  let i = 1
+  while (i < a.length - 1 && year > a[i][0]) i++
+  const [y0, f0] = a[i - 1]
+  const [y1, f1] = a[i]
+  return r0 + (f0 + ((year - y0) / (y1 - y0)) * (f1 - f0)) * (r1 - r0)
+}
 
 // The year along the timeline: intro at the first year, today held to the end
-export const YEAR = {
-  points: [0, ...ERAS.flatMap((e) => [e.at[0], e.at[0] + titleSpan(e)]), ERAS.at(-1).at[1], 1],
-  years: [FIRST_YEAR, ...ERAS.flatMap((e) => [e.years[0], e.years[0]]), LAST_YEAR, LAST_YEAR],
+export const YEAR = { points: [0], years: [FIRST_YEAR] }
+for (const era of ERAS) {
+  YEAR.points.push(era.at[0])
+  YEAR.years.push(era.years[0])
+  for (const [year] of anchorsOf(era).slice(0, -1)) {
+    YEAR.points.push(timeAt(era, year))
+    YEAR.years.push(year)
+  }
 }
+YEAR.points.push(ERAS.at(-1).at[1], 1)
+YEAR.years.push(LAST_YEAR, LAST_YEAR)
+
+// Moments of remembrance: the picture loses its colour and dims, one quiet line, no image
+export const MEMORIALS = [
+  {
+    key: 'march-1918',
+    era: 'republic',
+    year: 1918.24,
+    when: 'Mart 1918',
+    text: 'Bakıda mart qırğınlarında minlərlə dinc azərbaycanlı həlak olur. 31 mart Azərbaycanda Soyqırımı Günü kimi anılır.',
+  },
+  {
+    key: 'black-january',
+    era: 'soviet',
+    year: 1990.05,
+    when: '20 Yanvar 1990',
+    text: 'Sovet qoşunları Bakıya yeridilir, 130-dan çox dinc sakin həlak olur. Onlar Şəhidlər xiyabanında uyuyur.',
+  },
+]
 
 // The buildings, era by era. `year` = when it goes up (its note shows then), `when` = how the
 // note dates it, `x` = where it stands in the panorama (0–1440, see Panorama.jsx), `top` = the
@@ -263,6 +307,7 @@ export const BUILDINGS = [
     x: 1000,
     base: 180,
     top: 148,
+    removed: 1920.33, // the Republic falls in April 1920 and its flag comes down
   },
   {
     key: 'university',
@@ -275,12 +320,65 @@ export const BUILDINGS = [
     base: 88,
     top: 52,
   },
+  {
+    key: 'government-house',
+    era: 'soviet',
+    year: 1936,
+    built: 1952, // keeps going up after its note
+    when: '1936–1952',
+    name: 'Hökumət evi',
+    text: 'Sahildə nəhəng daş bina tikilməyə başlayır. Tikinti 16 il çəkir: müharibə illərində iş dayanır.',
+    x: 960,
+    base: 296,
+    top: 224,
+  },
+  {
+    key: 'neft-dashlari',
+    era: 'soviet',
+    year: 1949.85,
+    when: '7 noyabr 1949',
+    name: 'Neft Daşları',
+    text: 'Dənizin dibindən, ~1 100 m dərinlikdən neft çıxır. Sahildən ~40 km aralıda, dəmir estakadalar üstündə bütöv bir şəhər qurulur.',
+    x: 1330,
+    base: 312,
+    top: 290,
+  },
+  {
+    key: 'pumpjacks',
+    era: 'soviet',
+    year: 1950,
+    silent: true, // the nodding pumps take over from the wooden derricks
+    x: 1320,
+    base: 182,
+  },
+  {
+    key: 'funicular',
+    era: 'soviet',
+    year: 1960.34,
+    when: '5 may 1960',
+    name: 'Funikulyor',
+    text: 'Dənizkənarından təpəyə qalxan kanat yolu açılır. Vaqonlar bu gün də işləyir.',
+    x: 440,
+    base: 226,
+    top: 186,
+  },
+  {
+    key: 'metro',
+    era: 'soviet',
+    year: 1967.85,
+    when: '6 noyabr 1967',
+    name: 'Bakı metrosu',
+    text: 'Beş stansiya ilə metro açılır. Stansiyalar saray kimi bəzədilir.',
+    x: 620,
+    base: 296,
+    top: 268,
+  },
 ]
 
 // One day across 900 years. Colours at timeline points (era middles):
 // pre-dawn → dawn (miniature) → hazy noon (sepia) → golden afternoon (postcard) → sunset
 // → red dusk (Soviet poster) → night (neon)
-const DAY = [0, 0.12, 0.34, 0.495, 0.6, 0.72, 0.88, 1]
+const DAY = [0, 0.12, 0.335, 0.485, 0.6, 0.735, 0.89, 1]
 export const SKY = {
   points: DAY,
   top: ['#1f1d47', '#3b6fb6', '#a89a7c', '#7fa7c9', '#5b4b8a', '#2b2d42', '#050816', '#050816'],
@@ -299,12 +397,12 @@ export const HILLS = {
 }
 // Sepia over the picture: none in the miniature, strong in the engraving, half in the postcard
 export const TINT = {
-  points: [0, 0.2, 0.27, 0.42, 0.5, 0.6, 0.66, 1],
+  points: [0, 0.2, 0.27, 0.41, 0.49, 0.6, 0.66, 1],
   opacity: [0, 0, 0.8, 0.8, 0.35, 0.25, 0, 0],
 }
 // Paper grain over the picture: thick in the old "drawings", none in today's night
 export const GRAIN = {
-  points: [0, 0.12, 0.34, 0.495, 0.64, 0.8, 1],
+  points: [0, 0.12, 0.335, 0.485, 0.65, 0.82, 1],
   opacity: [0.25, 0.25, 0.45, 0.25, 0.15, 0, 0],
 }
 
@@ -320,9 +418,14 @@ for (const era of ERAS) era.title = era.at[0] + titleSpan(era) / 2
 // neighbouring notes, but not over its era's title (before it) or the next era's (after it).
 // A `silent` building goes up with the note before it; a `removed` one fades away in that year.
 const eraOf = (year) => ERAS[eraAt(year)]
+// A building with `built` keeps going up after its note until that year.
+// Memorials take their place among the notes the same way.
 for (const b of BUILDINGS) if (b.removed) b.goneAt = timeAt(eraOf(b.removed), b.removed)
+for (const b of BUILDINGS) if (b.built) b.builtAt = timeAt(eraOf(b.built), b.built)
 for (const era of ERAS) {
-  const list = BUILDINGS.filter((b) => b.era === era.key && !b.silent)
+  const list = [...BUILDINGS, ...MEMORIALS]
+    .filter((b) => b.era === era.key && !b.silent)
+    .sort((a, b) => a.year - b.year)
   BUILDINGS.filter((b) => b.era === era.key && b.silent).forEach((b) => (b.at = timeAt(era, b.year)))
   list.forEach((b) => (b.at = timeAt(era, b.year)))
   list.forEach((b, i) => {
@@ -334,7 +437,7 @@ for (const era of ERAS) {
 
 export const NOTES = BUILDINGS.filter((b) => !b.silent)
 
-const STOPS = [...ERAS.map((e) => e.title), ...NOTES.map((b) => b.at)].sort((a, b) => a - b)
+const STOPS = [...ERAS.map((e) => e.title), ...NOTES.map((b) => b.at), ...MEMORIALS.map((m) => m.at)].sort((a, b) => a - b)
 
 /** [start, end] of a stop's hold on the timeline. */
 export const holdRange = (at) => [at - HOLD / 2, at + HOLD / 2]

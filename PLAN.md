@@ -35,7 +35,8 @@ party-trick formatı.
     │   ├── uiSound.js      # hər düymənin klik səsi
     │   ├── revealMusic.js  # reveal səhifəsinin ambient musiqisi
     │   ├── spaceMusic.js   # kosmos səyahətinin musiqisi
-    │   └── oceanMusic.js   # okean dalışının musiqisi
+    │   ├── oceanMusic.js   # okean dalışının musiqisi
+    │   └── bakuMusic.js    # köhnə Bakının dövr-dövr musiqisi
     ├── components/
     │   ├── Landing.jsx           # giriş ekranı, ad input, Başlat düyməsi
     │   ├── MatrixRain.jsx        # canvas Matrix yağışı (dekorativ)
@@ -47,11 +48,10 @@ party-trick formatı.
         ├── goz/               # göz animasiyası və musiqisi (dünya deyil, yalnız "/"-da)
         ├── v1/WorldsLayout.jsx# /v1/* qabığı: keçid + "Başqa səhifəni kəşf et"
         ├── worlds.js          # dünyaların sırası
-        ├── shared/            # AnimatedTitle, util
+        ├── shared/            # util (rand)
         ├── kosmos/            # Günəş sistemi səyahəti (bax §5)
         ├── okean/             # Okeanın dibinə dalış (bax §6)
-        ├── kohne-baki/        # Köhnə Bakı: 900 illik time-lapse (fotosuz SVG)
-        ├── toy/  aurora/  pisikler/  telefon/
+        └── kohne-baki/        # Köhnə Bakı: 1000 illik time-lapse (fotosuz SVG)
 ```
 
 ## 4. İstifadəçi Axını
@@ -62,7 +62,7 @@ party-trick formatı.
 3. **eye**: göz animasiyası (~12 s, öz musiqisi ilə). Sonda qaranlıq çatlayıb parçalanır.
 4. **reveal**: sabit mətn "Hərşey hazırdır, daxil ola bilərsiz", hədəf adı, "Daxil ol" düyməsi
    (yükləmə zolağı, sonra `/v1`).
-5. **/v1/<dünya>**: `worlds.js`-dəki sıra ilə: kosmos → okean → kohne-baki → toy → aurora → pisikler → telefon,
+5. **/v1/<dünya>**: `worlds.js`-dəki sıra ilə: kosmos → okean → kohne-baki,
    sonuncudan sonra yenidən kosmos. "Başqa səhifəni kəşf et" düyməsi növbəti dünyaya keçirir.
    Bütün bu səhifələr default tam ekrandır.
 
@@ -124,6 +124,5 @@ Tətbiq qəsdən **zərərsiz və açıq zarafat** kimi qurulub. Bu qaydalar mə
 - ✅ Dünyalardakı faktlar maarifləndiricidir, fotolar açıq lisenziyalıdır və müəllifi göstərilir.
 
 ## 9. Sonrakı İşlər (nice-to-have)
-- Qalan dünyaları (toy, aurora, pisikler) kosmos və okean kimi scroll səyahətinə çevirmək.
 - Okean faktlarını mənbələrlə yoxlamaq (bəzi rəqəmlər təxminidir).
 - Temalar, rejimlər, lokallaşdırma.

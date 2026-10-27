@@ -33,7 +33,7 @@ Könüllü (opt-in), açıq şəkildə zarafat olan "haker terminalı" veb tətb
    çatlayıb parçalanır (`ShatterTransition`). Dünya deyil, yalnız `/`-da oynayır.
 5. **Final Reveal:** Böyük sabit mətn "Hərşey hazırdır, daxil ola bilərsiz" (təsadüfi variant yoxdur), hədəf adı,
    "Daxil ol" düyməsi (yükləmə zolağı, sonra `/v1`).
-6. **Dünyalar** (`/v1/*`): kosmos → okean → kohne-baki → toy → aurora → pisikler → telefon; hər birində
+6. **Dünyalar** (`/v1/*`): kosmos → okean → kohne-baki; hər birində
    "Başqa səhifəni kəşf et" növbətinə keçirir. Kosmos (Günəş sistemi) və okean (Mariana çökəkliyinə
    dalış) scroll səyahətləridir: faktlar, real fotolar, öz musiqiləri, sonda başa qayıdan düymə.
    Köhnə Bakı fotosuz time-lapse-dır: kamera yerindən tərpənmir, scroll zamanı (1000 → bugün)
@@ -44,7 +44,7 @@ Könüllü (opt-in), açıq şəkildə zarafat olan "haker terminalı" veb tətb
 Mənbə: `claude_animation_rules_setup.md`. Bu layihədə JS (TS yox) və Vite (Next.js yox) qalır.
 - Scroll ilə idarə olunan animasiyada `framer-motion`-un `useScroll`-u istifadə olunur;
   xam `scrollYProgress` üstünə həmişə `useSpring` qoyulur (titrəmə olmasın).
-- Hər hissə (məs. telefonun ekranı, batareyası, platası) ayrı komponentdir; `transform`,
+- Hər hissə (məs. Bakının hər binası, okeanın hər canlısı) ayrı komponentdir; `transform`,
   `opacity`, `scale` dəyərləri `useTransform` ilə scroll-a bağlanır.
 - Struktur: hündür scroll konteyner (`h-[300vh]`–`h-[400vh]`) içində
   `sticky top-0 h-screen` səhnə. Uzun səyahətlərdə (kosmos, okean) hündürlük data faylında
@@ -53,7 +53,7 @@ Mənbə: `claude_animation_rules_setup.md`. Bu layihədə JS (TS yox) və Vite (
 - `useTransform` xəritələrinin yanında qısa şərh yazılır ki, rahat tənzimlənsin
   (məs. `// 0.2 → 0.5: hissə z oxu boyunca çıxır`).
 - Mobil və desktopda işləməlidir (responsive fallback).
-- Nümunə: `src/pages/telefon/PhoneWorld.jsx` (sadə), `src/pages/okean/OceanWorld.jsx` (uzun səyahət).
+- Nümunə: `src/pages/okean/OceanWorld.jsx` (uzun səyahət), `src/pages/kohne-baki/BakuWorld.jsx` (time-lapse).
 
 ## Commit mesajları
 Hər commit `COMMIT_CONVENTION.md`-yə uyğun yazılır (Conventional Commits):

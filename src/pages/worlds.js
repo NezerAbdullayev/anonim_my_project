@@ -1,10 +1,6 @@
 import SpaceWorld from './kosmos/SpaceWorld.jsx'
 import OceanWorld from './okean/OceanWorld.jsx'
 import BakuWorld from './kohne-baki/BakuWorld.jsx'
-import PartyWorld from './toy/PartyWorld.jsx'
-import AuroraWorld from './aurora/AuroraWorld.jsx'
-import CatWorld from './pisikler/CatWorld.jsx'
-import PhoneWorld from './telefon/PhoneWorld.jsx'
 
 export const WORLDS_PATH = '/v1'
 
@@ -14,10 +10,6 @@ export const WORLDS = [
   { slug: 'kosmos', Component: SpaceWorld },
   { slug: 'okean', Component: OceanWorld },
   { slug: 'kohne-baki', Component: BakuWorld },
-  { slug: 'toy', Component: PartyWorld },
-  { slug: 'aurora', Component: AuroraWorld },
-  { slug: 'pisikler', Component: CatWorld },
-  { slug: 'telefon', Component: PhoneWorld },
   // The eye (src/pages/goz/) is not a world: it only plays on "/", after the terminal
 ]
 

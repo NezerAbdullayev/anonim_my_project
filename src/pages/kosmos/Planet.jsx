@@ -121,10 +121,10 @@ export default function Planet({ body, progress, scroll, engine, texture, moonTe
           transition={{ duration: shown ? 0.5 : 0.3, ease: 'easeOut' }}
         >
           <p className="text-xs uppercase tracking-[0.4em] text-sky-200/70">{body.tagline}</p>
-          <h2 className="font-display text-5xl font-black tracking-wide drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)] sm:text-7xl">
+          <h2 className="font-display text-3xl font-black tracking-wide drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)] sm:text-7xl">
             {body.name}
           </h2>
-          <ul className="mt-3 space-y-1 font-mono text-xl text-slate-200 drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]">
+          <ul className="mt-3 space-y-1 font-mono text-xs text-slate-200 drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)] sm:text-xl">
             {body.facts.map((f) => (
               <li key={f}>{f}</li>
             ))}

@@ -142,13 +142,13 @@ export default function BlackHole({ bh, onRestart }) {
       {/* Label with its facts and the real image (same look as the planet labels) */}
       <Caption
         shown={phase === 'hold'}
-        className="bottom-[7vh] left-4 right-4 z-[660] sm:bottom-auto sm:left-[6vw] sm:right-auto sm:top-1/2 sm:w-[32vw] sm:-translate-y-1/2"
+        className="bottom-[calc(7vh+40px)] left-4 right-4 z-[660] sm:bottom-auto sm:left-[6vw] sm:right-auto sm:top-1/2 sm:w-[32vw] sm:-translate-y-1/2"
       >
         <p className="text-xs uppercase tracking-[0.4em] text-amber-200/80">{BLACK_HOLE.tagline}</p>
-        <h2 className="font-display text-5xl font-black tracking-wide drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)] sm:text-7xl">
+        <h2 className="font-display text-3xl font-black tracking-wide drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)] sm:text-7xl">
           {BLACK_HOLE.name}
         </h2>
-        <ul className="mt-3 space-y-1 font-mono text-xl text-slate-200 drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]">
+        <ul className="mt-3 space-y-1 font-mono text-xs text-slate-200 drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)] sm:text-xl">
           {BLACK_HOLE.facts.map((f) => (
             <li key={f}>{f}</li>
           ))}
@@ -215,7 +215,7 @@ export default function BlackHole({ bh, onRestart }) {
             <motion.button
               type="button"
               onClick={onRestart}
-              className="absolute bottom-[18vh] left-1/2 -translate-x-1/2 rounded-full bg-slate-900 px-8 py-3 font-display text-lg font-bold text-amber-100 shadow-lg"
+              className="absolute bottom-[18vh] left-1/2 -translate-x-1/2 rounded-full bg-slate-900 px-8 py-3 font-display text-sm font-bold text-amber-100 shadow-lg sm:text-lg"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}

@@ -444,8 +444,6 @@ export const BOTTOM = {
   ],
 }
 
-const STOPS = [...ZONES.flatMap((z) => [z.title, ...(z.stops ?? []).map((s) => s.at)]), BOTTOM.at]
-
 /** [start, end] of a stop's hold on the dive timeline. */
 export const holdRange = (at) => [at - HOLD / 2, at + HOLD / 2]
 
@@ -453,18 +451,30 @@ export const holdRange = (at) => [at - HOLD / 2, at + HOLD / 2]
 // instead HOLD_VH of scroll (≈ 2,5 s at a calm scrolling pace, ~50vh/s)
 const BASE_VH = 2400
 const HOLD_VH = 120
+// A creature's hold is READ_VH longer (≈ 1 s): its facts are all in by FACTS_END of the hold,
+// the rest is a pause on the full card before it rises away
+const READ_VH = 50
+export const FACTS_END = HOLD_VH / (HOLD_VH + READ_VH)
+
+const STOPS = [
+  ...ZONES.flatMap((z) => [
+    { at: z.title, vh: HOLD_VH },
+    ...(z.stops ?? []).map((s) => ({ at: s.at, vh: s.facts ? HOLD_VH + READ_VH : HOLD_VH })),
+  ]),
+  { at: BOTTOM.at, vh: HOLD_VH },
+]
 
 const buildTrack = () => {
   const dive = [0]
   const scroll = [0]
   let vh = 0
   let last = 0
-  for (const at of STOPS) {
-    const [h0, h1] = holdRange(at)
+  for (const stop of STOPS) {
+    const [h0, h1] = holdRange(stop.at)
     vh += (h0 - last) * BASE_VH
     dive.push(h0)
     scroll.push(vh)
-    vh += HOLD_VH
+    vh += stop.vh
     dive.push(h1)
     scroll.push(vh)
     last = h1

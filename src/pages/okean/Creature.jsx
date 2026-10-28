@@ -1,5 +1,5 @@
 import { motion, useTransform } from 'framer-motion'
-import { holdRange } from './dive.js'
+import { FACTS_END, holdRange } from './dive.js'
 
 // Soft oval edge so the photo melts into the water around it
 const MASK = 'radial-gradient(ellipse 50% 50% at center, #000 60%, transparent 100%)'
@@ -33,9 +33,9 @@ export default function Creature({ creature, progress }) {
   // the photo grows a touch as it comes closer
   const scale = useTransform(progress, [enter, h0, h1, leave], [0.85, 1, 1, 0.9])
 
-  // The facts appear one by one from just before the hold to its end
+  // The facts appear one by one from just before the hold to FACTS_END of it; then a pause
   const r0 = h0 - span * 0.25
-  const step = (h1 - r0) / facts.length
+  const step = (h0 + (h1 - h0) * FACTS_END - r0) / facts.length
 
   return (
     <motion.section

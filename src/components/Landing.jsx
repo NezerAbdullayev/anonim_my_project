@@ -169,7 +169,7 @@ export default function Landing({ name, setName, onStart }) {
 
         <button
           type="submit"
-          className="neon-text w-full rounded border-2 border-neon bg-neon/10 px-6 py-4 text-xl font-bold uppercase tracking-wider transition hover:bg-neon/20 focus:ring-2"
+          className="neon-text w-full rounded border-2 border-neon bg-neon/10 px-6 py-4 text-base font-bold sm:text-xl uppercase tracking-wider transition hover:bg-neon/20 focus:ring-2"
         >
           Daxil ol
         </button>

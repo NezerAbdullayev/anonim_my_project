@@ -19,7 +19,7 @@ function FlipWaveTitle({ text }) {
   return (
     <motion.h1
       aria-label={text}
-      className="neon-text font-display text-4xl font-black leading-tight tracking-wide [perspective:600px] sm:text-6xl"
+      className="neon-text font-display text-2xl font-black leading-tight tracking-wide [perspective:600px] sm:text-6xl"
       animate={
         reduce
           ? undefined
@@ -133,7 +133,7 @@ export default function PrankReveal({ name, onEnter, delay = 0 }) {
             Hörmətli <strong className="neon-text">{target}</strong>, narahat olma: heç nə oğurlanmadı.
           </p>
         )}
-        <div className="mt-16 flex flex-col items-center gap-4">
+        <div className="mt-8 flex flex-col items-center gap-4 sm:mt-16">
           <button
             type="button"
             onClick={() => setLoading(true)}

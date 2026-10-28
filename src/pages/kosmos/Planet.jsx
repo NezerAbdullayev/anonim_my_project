@@ -108,7 +108,7 @@ export default function Planet({ body, progress, scroll, engine, texture, moonTe
 
       {/* Positioning (incl. the centring translate) on the outer box: the animated x would override it */}
       <div
-        className={`pointer-events-none absolute bottom-[7vh] left-4 right-4 z-[600] sm:bottom-auto sm:top-1/2 sm:w-[30vw] sm:-translate-y-1/2 ${labelSide}`}
+        className={`pointer-events-none absolute bottom-[calc(7vh+40px)] left-4 right-4 z-[600] sm:bottom-auto sm:top-1/2 sm:w-[30vw] sm:-translate-y-1/2 ${labelSide}`}
       >
         <motion.div
           initial={false}

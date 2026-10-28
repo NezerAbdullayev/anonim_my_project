@@ -54,7 +54,7 @@ export default function Sun({ progress, zoom, engine, texture }) {
 
       {/* Same look as the planet labels, on the left (at the bottom on phones); positioning on
           the outer box, since the animated x would override its centring translate */}
-      <div className="pointer-events-none absolute bottom-[7vh] left-4 right-4 z-[600] sm:bottom-auto sm:left-[6vw] sm:right-auto sm:top-1/2 sm:w-[30vw] sm:-translate-y-1/2">
+      <div className="pointer-events-none absolute bottom-[calc(7vh+40px)] left-4 right-4 z-[600] sm:bottom-auto sm:left-[6vw] sm:right-auto sm:top-1/2 sm:w-[30vw] sm:-translate-y-1/2">
         <motion.div
           initial={false}
           animate={
